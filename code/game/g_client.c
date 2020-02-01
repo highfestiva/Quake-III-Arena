@@ -747,7 +747,7 @@ void ClientUserinfoChanged( int clientNum ) {
 
 	if ( client->pers.connected == CON_CONNECTED ) {
 		if ( strcmp( oldname, client->pers.netname ) ) {
-			trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " renamed to %s\n\"", oldname, 
+			trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " bytte namn till %s\n\"", oldname, 
 				client->pers.netname) );
 		}
 	}
@@ -962,7 +962,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 
 	// don't do the "xxx connected" messages if they were caried over from previous level
 	if ( firstTime ) {
-		trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " connected\n\"", client->pers.netname) );
+		trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " anslöt\n\"", client->pers.netname) );
 	}
 
 	if ( g_gametype.integer >= GT_TEAM &&
@@ -1030,7 +1030,7 @@ void ClientBegin( int clientNum ) {
 		tent->s.clientNum = ent->s.clientNum;
 
 		if ( g_gametype.integer != GT_TOURNAMENT  ) {
-			trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " entered the game\n\"", client->pers.netname) );
+			trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " gick med i spelet\n\"", client->pers.netname) );
 		}
 	}
 	G_LogPrintf( "ClientBegin: %i\n", clientNum );
@@ -1073,13 +1073,13 @@ void ClientSpawn(gentity_t *ent) {
 	if ( client->sess.sessionTeam == TEAM_SPECTATOR ) {
 		spawnPoint = SelectSpectatorSpawnPoint ( 
 						spawn_origin, spawn_angles);
-	} else if (g_gametype.integer >= GT_CTF ) {
+	} else { //Jonte if (g_gametype.integer >= GT_CTF ) {
 		// all base oriented team games use the CTF spawn points
 		spawnPoint = SelectCTFSpawnPoint ( 
 						client->sess.sessionTeam, 
 						client->pers.teamState.state, 
 						spawn_origin, spawn_angles);
-	} else {
+	} /* Jonte else {
 		do {
 			// the first spawn should be at a good looking spot
 			if ( !client->pers.initialSpawn && client->pers.localClient ) {
@@ -1105,7 +1105,7 @@ void ClientSpawn(gentity_t *ent) {
 			break;
 
 		} while ( 1 );
-	}
+	}*/
 	client->pers.teamState.state = TEAM_ACTIVE;
 
 	// always clear the kamikaze flag
@@ -1176,12 +1176,12 @@ void ClientSpawn(gentity_t *ent) {
 
 	client->ps.clientNum = index;
 
-	client->ps.stats[STAT_WEAPONS] = ( 1 << WP_MACHINEGUN );
+	/*client->ps.stats[STAT_WEAPONS] = ( 1 << WP_MACHINEGUN );
 	if ( g_gametype.integer == GT_TEAM ) {
 		client->ps.ammo[WP_MACHINEGUN] = 50;
 	} else {
 		client->ps.ammo[WP_MACHINEGUN] = 100;
-	}
+	}*/
 
 	client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GAUNTLET );
 	client->ps.ammo[WP_GAUNTLET] = -1;
@@ -1206,7 +1206,7 @@ void ClientSpawn(gentity_t *ent) {
 		trap_LinkEntity (ent);
 
 		// force the base weapon up
-		client->ps.weapon = WP_MACHINEGUN;
+		client->ps.weapon = WP_GAUNTLET;
 		client->ps.weaponstate = WEAPON_READY;
 
 	}
@@ -1220,7 +1220,7 @@ void ClientSpawn(gentity_t *ent) {
 	client->latched_buttons = 0;
 
 	// set default animations
-	client->ps.torsoAnim = TORSO_STAND;
+	client->ps.torsoAnim = TORSO_STAND2;
 	client->ps.legsAnim = LEGS_IDLE;
 
 	if ( level.intermissiontime ) {

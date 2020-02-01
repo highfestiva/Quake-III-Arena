@@ -883,9 +883,12 @@ in anyway.
 ===================
 */
 void CL_RequestAuthorization( void ) {
+/*
+Jonte
 	char	nums[64];
 	int		i, j, l;
 	cvar_t	*fs;
+//*/
 
 	if ( !cls.authorizeServer.port ) {
 		Com_Printf( "Resolving %s\n", AUTHORIZE_SERVER_NAME );
@@ -904,6 +907,7 @@ void CL_RequestAuthorization( void ) {
 		return;
 	}
 
+	/* Jonte
 	if ( Cvar_VariableValue( "fs_restrict" ) ) {
 		Q_strncpyz( nums, "demota", sizeof( nums ) );
 	} else {
@@ -927,7 +931,7 @@ void CL_RequestAuthorization( void ) {
 
 	fs = Cvar_Get ("cl_anonymous", "0", CVAR_INIT|CVAR_SYSTEMINFO );
 
-	NET_OutOfBandPrint(NS_CLIENT, cls.authorizeServer, va("getKeyAuthorize %i %s", fs->integer, nums) );
+	NET_OutOfBandPrint(NS_CLIENT, cls.authorizeServer, va("getKeyAuthorize %i %s", fs->integer, nums) );*/
 }
 
 /*
@@ -1581,8 +1585,8 @@ void CL_DisconnectPacket( netadr_t from ) {
 	}
 
 	// drop the connection
-	Com_Printf( "Server disconnected for unknown reason\n" );
-	Cvar_Set("com_errorMessage", "Server disconnected for unknown reason\n" );
+	Com_Printf( "Servern kopplade från av okänd anledning\n" );
+	Cvar_Set("com_errorMessage", "Servern kopplade från av okänd anledning\n" );
 	CL_Disconnect( qtrue );
 }
 
@@ -2118,6 +2122,7 @@ void CL_InitRenderer( void ) {
 	re.BeginRegistration( &cls.glconfig );
 
 	// load character sets
+
 	cls.charSetShader = re.RegisterShader( "gfx/2d/bigchars" );
 	cls.whiteShader = re.RegisterShader( "white" );
 	cls.consoleShader = re.RegisterShader( "console" );
@@ -2220,6 +2225,7 @@ void CL_InitRef( void ) {
 	ri.CIN_UploadCinematic = CIN_UploadCinematic;
 	ri.CIN_PlayCinematic = CIN_PlayCinematic;
 	ri.CIN_RunCinematic = CIN_RunCinematic;
+	//ri.CG_RegisterWeapon = CG_RegisterWeapon;
 
 	ret = GetRefAPI( REF_API_VERSION, &ri );
 
@@ -2788,7 +2794,7 @@ void CL_ServerStatusResponse( netadr_t from, msg_t *msg ) {
 			if (s)
 				s++;
 			else
-				s = "unknown";
+				s = "okänt";
 			Com_Printf("%-2d   %-3d    %-3d   %s\n", i, score, ping, s );
 		}
 	}

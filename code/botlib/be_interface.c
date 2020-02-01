@@ -141,7 +141,7 @@ int Export_BotLibSetup(void)
   memset( &botlibglobals, 0, sizeof(botlibglobals) ); // bk001207 - init
 	//initialize byte swapping (litte endian etc.)
 //	Swap_Init();
-	Log_Open("botlib.log");
+	//Jonte: Log_Open("botlib.log");
 	//
 	botimport.Print(PRT_MESSAGE, "------- BotLib Initialization -------\n");
 	//
@@ -846,7 +846,7 @@ GetBotLibAPI
 ============
 */
 botlib_export_t *GetBotLibAPI(int apiVersion, botlib_import_t *import) {
-	assert(import);   // bk001129 - this wasn't set for baseq3/
+	assert(import);   // bk001129 - this wasn't set for joopdata/
   botimport = *import;
   assert(botimport.Print);   // bk001129 - pars pro toto
 

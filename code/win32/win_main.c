@@ -33,10 +33,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include <io.h>
 #include <conio.h>
 
-#define	CD_BASEDIR	"quake3"
-#define	CD_EXE		"quake3.exe"
+#define	CD_BASEDIR	"Jooperative"
+#define	CD_EXE		"Jooperative.exe"
 #define	CD_BASEDIR_LINUX	"bin\\x86\\glibc-2.1"
-#define	CD_EXE_LINUX "quake3"
+#define	CD_EXE_LINUX "Jooperative"
 #define MEM_THRESHOLD 96*1024*1024
 
 static char		sys_cmdline[MAX_STRING_CHARS];
@@ -537,7 +537,7 @@ void * QDECL Sys_LoadDll( const char *name, char *fqpath , int (QDECL **entryPoi
 	char	*fn;
 #ifdef NDEBUG
 	int		timestamp;
-  int   ret;
+	//int   ret;
 #endif
 	char	filename[MAX_QPATH];
 
@@ -551,7 +551,7 @@ void * QDECL Sys_LoadDll( const char *name, char *fqpath , int (QDECL **entryPoi
 		&& !Cvar_VariableIntegerValue( "com_blindlyLoadDLLs" ) ) {
 		if (FS_FileExists(filename)) {
 			lastWarning = timestamp;
-			ret = MessageBoxEx( NULL, "You are about to load a .DLL executable that\n"
+			/*ret = MessageBoxEx( NULL, "You are about to load a .DLL executable that\n"
 				  "has not been verified for use with Quake III Arena.\n"
 				  "This type of file can compromise the security of\n"
 				  "your computer.\n\n"
@@ -560,7 +560,7 @@ void * QDECL Sys_LoadDll( const char *name, char *fqpath , int (QDECL **entryPoi
 				  MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ) );
 			if( ret != IDOK ) {
 				return NULL;
-			}
+			}*/
 		}
 	}
 #endif
@@ -1085,7 +1085,7 @@ void Sys_Init( void ) {
 	}
 	else
 	{
-		Cvar_Set( "arch", "unknown Windows variant" );
+		Cvar_Set( "arch", "okänd Windows-variant" );
 	}
 
 	// save out a couple things in rom cvars for the renderer to access
@@ -1221,11 +1221,17 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 		Sys_ShowConsole( 0, qfalse );
 	}
 
+	// Jonte: start right away.
+	//Com_AddStartupCommands
+	//VM_Call(uivm, UI_RUN_MENU_SCRIPT, "SkirmishStart");
+	//Cbuf_AddText ("map Jonte4\n");
+
+
     // main game loop
 	while( 1 ) {
 		// if not running as a game client, sleep a bit
-		if ( g_wv.isMinimized || ( com_dedicated && com_dedicated->integer ) ) {
-			Sleep( 5 );
+		if ( !g_wv.activeApp || ( com_dedicated && com_dedicated->integer ) ) {
+			Sleep( 15 );
 		}
 
 		// set low precision every frame, because some system calls

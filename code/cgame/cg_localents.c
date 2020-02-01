@@ -847,7 +847,7 @@ void CG_AddLocalEntities( void ) {
 			CG_AddMoveScaleFade( le );
 			break;
 
-		case LE_FADE_RGB:				// teleporters, railtrails
+		case LE_FADE_RGB:				// teleporters, snipertrails
 			CG_AddFadeRGB( le );
 			break;
 

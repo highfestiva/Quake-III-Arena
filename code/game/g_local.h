@@ -29,7 +29,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //==================================================================
 
 // the "gameversion" client command will print this plus compile date
-#define	GAMEVERSION	"baseq3"
+#define	GAMEVERSION	"joopdata"
 
 #define BODY_QUEUE_SIZE		8
 
@@ -583,6 +583,7 @@ void ClientSpawn( gentity_t *ent );
 void player_die (gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int damage, int mod);
 void AddScore( gentity_t *ent, vec3_t origin, int score );
 void CalculateRanks( void );
+void LogExit( const char *string );
 qboolean SpotWouldTelefrag( gentity_t *spot );
 
 //

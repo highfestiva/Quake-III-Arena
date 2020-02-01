@@ -1320,8 +1320,8 @@ void R_AddEntitySurfaces (void) {
 		case RT_SPRITE:
 		case RT_BEAM:
 		case RT_LIGHTNING:
-		case RT_RAIL_CORE:
-		case RT_RAIL_RINGS:
+		case RT_SNIPER_CORE:
+		case RT_SNIPER_RINGS:
 			// self blood sprites, talk balloons, etc should not be drawn in the primary
 			// view.  We can't just do this check for all entities, because md3
 			// entities may still want to cast shadows from them

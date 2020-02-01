@@ -150,9 +150,9 @@ typedef struct {
 	int				painDirection;	// flip from 0 to 1
 	int				lightningFiring;
 
-	// railgun trail spawning
-	vec3_t			railgunImpact;
-	qboolean		railgunFlash;
+	// sniper rifle trail spawning
+	vec3_t			sniperrifleImpact;
+	qboolean		sniperrifleFlash;
 
 	// machinegun spinning
 	float			barrelAngle;
@@ -717,8 +717,8 @@ typedef struct {
 	qhandle_t	machinegunBrassModel;
 	qhandle_t	shotgunBrassModel;
 
-	qhandle_t	railRingsShader;
-	qhandle_t	railCoreShader;
+	qhandle_t	sniperRingsShader;
+	qhandle_t	sniperCoreShader;
 
 	qhandle_t	lightningShader;
 
@@ -779,7 +779,7 @@ typedef struct {
 	qhandle_t	lightningExplosionModel;
 
 	// weapon effect shaders
-	qhandle_t	railExplosionShader;
+	qhandle_t	sniperExplosionShader;
 	qhandle_t	plasmaExplosionShader;
 	qhandle_t	bulletExplosionShader;
 	qhandle_t	rocketExplosionShader;
@@ -834,7 +834,7 @@ typedef struct {
 	sfxHandle_t	sfx_ric1;
 	sfxHandle_t	sfx_ric2;
 	sfxHandle_t	sfx_ric3;
-	sfxHandle_t	sfx_railg;
+	sfxHandle_t	sfx_sniper;
 	sfxHandle_t	sfx_rockexp;
 	sfxHandle_t	sfx_plasmaexp;
 #ifdef MISSIONPACK
@@ -1109,7 +1109,7 @@ extern	vmCvar_t		cg_animSpeed;
 extern	vmCvar_t		cg_debugAnim;
 extern	vmCvar_t		cg_debugPosition;
 extern	vmCvar_t		cg_debugEvents;
-extern	vmCvar_t		cg_railTrailTime;
+extern	vmCvar_t		cg_sniperTrailTime;
 extern	vmCvar_t		cg_errorDecay;
 extern	vmCvar_t		cg_nopredict;
 extern	vmCvar_t		cg_noPlayerAnims;
@@ -1166,7 +1166,7 @@ extern  vmCvar_t		cg_smallFont;
 extern  vmCvar_t		cg_bigFont;
 extern	vmCvar_t		cg_noTaunt;
 extern	vmCvar_t		cg_noProjectileTrail;
-extern	vmCvar_t		cg_oldRail;
+extern	vmCvar_t		cg_oldSniper;
 extern	vmCvar_t		cg_oldRocket;
 extern	vmCvar_t		cg_oldPlasma;
 extern	vmCvar_t		cg_trueLightning;
@@ -1358,7 +1358,7 @@ void CG_MissileHitPlayer( int weapon, vec3_t origin, vec3_t dir, int entityNum )
 void CG_ShotgunFire( entityState_t *es );
 void CG_Bullet( vec3_t origin, int sourceEntityNum, vec3_t normal, qboolean flesh, int fleshEntityNum );
 
-void CG_RailTrail( clientInfo_t *ci, vec3_t start, vec3_t end );
+void CG_SniperTrail( clientInfo_t *ci, vec3_t start, vec3_t end );
 void CG_GrappleTrail( centity_t *ent, const weaponInfo_t *wi );
 void CG_AddViewWeapon (playerState_t *ps);
 void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent, int team );
@@ -1666,4 +1666,4 @@ void	CG_ParticleExplosion (char *animStr, vec3_t origin, vec3_t vel, int duratio
 extern qboolean		initparticles;
 int CG_NewParticleArea ( int num );
 
-
+void CG_JbConvertMultiByteToAnsi(char* pAnsiText, const unsigned char* pMultiByteText);

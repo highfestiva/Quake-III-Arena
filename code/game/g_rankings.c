@@ -202,8 +202,8 @@ void G_RankFireWeapon( int self, int weapon )
 	case WP_LIGHTNING:
 		trap_RankReportInt( self, -1, QGR_KEY_SHOT_FIRED_LIGHTNING, 1, 1 );
 		break;
-	case WP_RAILGUN:
-		trap_RankReportInt( self, -1, QGR_KEY_SHOT_FIRED_RAILGUN, 1, 1 );
+	case WP_SNIPERRIFLE:
+		trap_RankReportInt( self, -1, QGR_KEY_SHOT_FIRED_SNIPERRIFLE, 1, 1 );
 		break;
 	case WP_PLASMAGUN:
 		trap_RankReportInt( self, -1, QGR_KEY_SHOT_FIRED_PLASMA, 1, 1 );
@@ -327,9 +327,9 @@ void G_RankDamage( int self, int attacker, int damage, int means_of_death )
 		key_damage = QGR_KEY_DAMAGE_TAKEN_PLASMA;
 		key_splash = QGR_KEY_SPLASH_TAKEN_PLASMA;
 		break;
-	case MOD_RAILGUN:
-		key_hit = QGR_KEY_HIT_TAKEN_RAILGUN;
-		key_damage = QGR_KEY_DAMAGE_TAKEN_RAILGUN;
+	case MOD_SNIPER:
+		key_hit = QGR_KEY_HIT_TAKEN_SNIPERRIFLE;
+		key_damage = QGR_KEY_DAMAGE_TAKEN_SNIPERRIFLE;
 		break;
 	case MOD_LIGHTNING:
 		key_hit = QGR_KEY_HIT_TAKEN_LIGHTNING;
@@ -404,9 +404,9 @@ void G_RankDamage( int self, int attacker, int damage, int means_of_death )
 			key_damage = QGR_KEY_DAMAGE_GIVEN_PLASMA;
 			key_splash = QGR_KEY_SPLASH_GIVEN_PLASMA;
 			break;
-		case MOD_RAILGUN:
-			key_hit = QGR_KEY_HIT_GIVEN_RAILGUN;
-			key_damage = QGR_KEY_DAMAGE_GIVEN_RAILGUN;
+		case MOD_SNIPER:
+			key_hit = QGR_KEY_HIT_GIVEN_SNIPERRIFLE;
+			key_damage = QGR_KEY_DAMAGE_GIVEN_SNIPERRIFLE;
 			break;
 		case MOD_LIGHTNING:
 			key_hit = QGR_KEY_HIT_GIVEN_LIGHTNING;
@@ -566,8 +566,8 @@ void G_RankPlayerDie( int self, int attacker, int means_of_death )
 		case MOD_PLASMA_SPLASH:
 			trap_RankReportInt( p1, p2, QGR_KEY_SUICIDE_PLASMA, 1, 1 );
 			break;
-		case MOD_RAILGUN:
-			trap_RankReportInt( p1, p2, QGR_KEY_SUICIDE_RAILGUN, 1, 1 );
+		case MOD_SNIPER:
+			trap_RankReportInt( p1, p2, QGR_KEY_SUICIDE_SNIPERRIFLE, 1, 1 );
 			break;
 		case MOD_LIGHTNING:
 			trap_RankReportInt( p1, p2, QGR_KEY_SUICIDE_LIGHTNING, 1, 1 );
@@ -614,8 +614,8 @@ void G_RankPlayerDie( int self, int attacker, int means_of_death )
 		case MOD_PLASMA_SPLASH:
 			trap_RankReportInt( p1, p2, QGR_KEY_FRAG_PLASMA, 1, 1 );
 			break;
-		case MOD_RAILGUN:
-			trap_RankReportInt( p1, p2, QGR_KEY_FRAG_RAILGUN, 1, 1 );
+		case MOD_SNIPER:
+			trap_RankReportInt( p1, p2, QGR_KEY_FRAG_SNIPERRIFLE, 1, 1 );
 			break;
 		case MOD_LIGHTNING:
 			trap_RankReportInt( p1, p2, QGR_KEY_FRAG_LIGHTNING, 1, 1 );
@@ -681,8 +681,8 @@ void G_RankWeaponTime( int self, int weapon )
 	case WP_LIGHTNING:
 		trap_RankReportInt( self, -1, QGR_KEY_TIME_LIGHTNING, time, 1 );
 		break;
-	case WP_RAILGUN:
-		trap_RankReportInt( self, -1, QGR_KEY_TIME_RAILGUN, time, 1 );
+	case WP_SNIPERRIFLE:
+		trap_RankReportInt( self, -1, QGR_KEY_TIME_SNIPERRIFLE, time, 1 );
 		break;
 	case WP_PLASMAGUN:
 		trap_RankReportInt( self, -1, QGR_KEY_TIME_PLASMA, time, 1 );
@@ -732,8 +732,8 @@ void G_RankPickupWeapon( int self, int weapon )
 	case WP_LIGHTNING:
 		trap_RankReportInt( self, -1, QGR_KEY_PICKUP_LIGHTNING, 1, 1 );
 		break;
-	case WP_RAILGUN:
-		trap_RankReportInt( self, -1, QGR_KEY_PICKUP_RAILGUN, 1, 1 );
+	case WP_SNIPERRIFLE:
+		trap_RankReportInt( self, -1, QGR_KEY_PICKUP_SNIPERRIFLE, 1, 1 );
 		break;
 	case WP_PLASMAGUN:
 		trap_RankReportInt( self, -1, QGR_KEY_PICKUP_PLASMA, 1, 1 );
@@ -787,7 +787,7 @@ void G_RankPickupAmmo( int self, int weapon, int quantity )
 		trap_RankReportInt( self, -1, QGR_KEY_BOXES_LG_AMMO, 1, 1 );
 		trap_RankReportInt( self, -1, QGR_KEY_ROUNDS_LG_AMMO, quantity, 1 );
 		break;
-	case WP_RAILGUN:
+	case WP_SNIPERRIFLE:
 		trap_RankReportInt( self, -1, QGR_KEY_BOXES_SLUGS, 1, 1 );
 		trap_RankReportInt( self, -1, QGR_KEY_ROUNDS_SLUGS, quantity, 1 );
 		break;

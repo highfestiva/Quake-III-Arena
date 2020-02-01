@@ -120,28 +120,28 @@ static void CG_Obituary( entityState_t *ent ) {
 
 	switch( mod ) {
 	case MOD_SUICIDE:
-		message = "suicides";
+		message = "begick självmord";
 		break;
 	case MOD_FALLING:
-		message = "cratered";
+		message = "slog ihjäl sig";
 		break;
 	case MOD_CRUSH:
-		message = "was squished";
+		message = "blev mosad";
 		break;
 	case MOD_WATER:
-		message = "sank like a rock";
+		message = "sjönk som en sten";
 		break;
 	case MOD_SLIME:
-		message = "melted";
+		message = "smälte";
 		break;
 	case MOD_LAVA:
-		message = "does a back flip into the lava";
+		message = "tittade djupt i den turkiska peppar'n";
 		break;
 	case MOD_TARGET_LASER:
-		message = "saw the light";
+		message = "såg ljuset";
 		break;
 	case MOD_TRIGGER_HURT:
-		message = "was in the wrong place";
+		message = "var på fel plats";
 		break;
 	default:
 		message = NULL;
@@ -153,54 +153,28 @@ static void CG_Obituary( entityState_t *ent ) {
 		switch (mod) {
 #ifdef MISSIONPACK
 		case MOD_KAMIKAZE:
-			message = "goes out with a bang";
+			message = "levde kort och dog explosivt";
 			break;
 #endif
 		case MOD_GRENADE_SPLASH:
-			if ( gender == GENDER_FEMALE )
-				message = "tripped on her own grenade";
-			else if ( gender == GENDER_NEUTER )
-				message = "tripped on its own grenade";
-			else
-				message = "tripped on his own grenade";
+			message = "snubblade på sin egen granat";
 			break;
 		case MOD_ROCKET_SPLASH:
-			if ( gender == GENDER_FEMALE )
-				message = "blew herself up";
-			else if ( gender == GENDER_NEUTER )
-				message = "blew itself up";
-			else
-				message = "blew himself up";
+			message = "sprängde sig själv";
 			break;
 		case MOD_PLASMA_SPLASH:
-			if ( gender == GENDER_FEMALE )
-				message = "melted herself";
-			else if ( gender == GENDER_NEUTER )
-				message = "melted itself";
-			else
-				message = "melted himself";
+			message = "smälte sig själv";
 			break;
 		case MOD_BFG_SPLASH:
-			message = "should have used a smaller gun";
+			message = "borde ha en mindre pickadull";
 			break;
 #ifdef MISSIONPACK
 		case MOD_PROXIMITY_MINE:
-			if( gender == GENDER_FEMALE ) {
-				message = "found her prox mine";
-			} else if ( gender == GENDER_NEUTER ) {
-				message = "found it's prox mine";
-			} else {
-				message = "found his prox mine";
-			}
+			message = "hittade sin mina";
 			break;
 #endif
 		default:
-			if ( gender == GENDER_FEMALE )
-				message = "killed herself";
-			else if ( gender == GENDER_NEUTER )
-				message = "killed itself";
-			else
-				message = "killed himself";
+			message = "dödade sig själv";
 			break;
 		}
 	}
@@ -215,11 +189,11 @@ static void CG_Obituary( entityState_t *ent ) {
 		char	*s;
 
 		if ( cgs.gametype < GT_TEAM ) {
-			s = va("You fragged %s\n%s place with %i", targetName, 
+			s = va("Du pangade %s\n%s place with %i", targetName, 
 				CG_PlaceString( cg.snap->ps.persistant[PERS_RANK] + 1 ),
 				cg.snap->ps.persistant[PERS_SCORE] );
 		} else {
-			s = va("You fragged %s", targetName );
+			s = va("You pangade %s", targetName );
 		}
 #ifdef MISSIONPACK
 		if (!(cg_singlePlayerActive.integer && cg_cameraOrbit.integer)) {
@@ -248,78 +222,77 @@ static void CG_Obituary( entityState_t *ent ) {
 	if ( attacker != ENTITYNUM_WORLD ) {
 		switch (mod) {
 		case MOD_GRAPPLE:
-			message = "was caught by";
+			message = "greps av";
 			break;
 		case MOD_GAUNTLET:
-			message = "was pummeled by";
+			message = "vispades av";
 			break;
 		case MOD_MACHINEGUN:
-			message = "was machinegunned by";
+			message = "blev uzi-skottad av";
 			break;
 		case MOD_SHOTGUN:
-			message = "was gunned down by";
+			message = "blev nerhaglad av";
 			break;
 		case MOD_GRENADE:
-			message = "ate";
-			message2 = "'s grenade";
+			message = "fick smaka";
+			message2 = "'s granat";
 			break;
 		case MOD_GRENADE_SPLASH:
-			message = "was shredded by";
-			message2 = "'s shrapnel";
+			message = "blev skivad av";
+			message2 = "'s splitter";
 			break;
 		case MOD_ROCKET:
-			message = "ate";
-			message2 = "'s rocket";
+			message = "fick smaka";
+			message2 = "'s raket";
 			break;
 		case MOD_ROCKET_SPLASH:
-			message = "almost dodged";
-			message2 = "'s rocket";
+			message = "blev splittrad av";
+			message2 = "'s raket";
 			break;
 		case MOD_PLASMA:
-			message = "was melted by";
-			message2 = "'s plasmagun";
+			message = "smälte av";
+			message2 = "'s plasma";
 			break;
 		case MOD_PLASMA_SPLASH:
-			message = "was melted by";
-			message2 = "'s plasmagun";
+			message = "smälte av";
+			message2 = "'s plasma";
 			break;
-		case MOD_RAILGUN:
-			message = "was railed by";
+		case MOD_SNIPER:
+			message = "studsade på";
 			break;
 		case MOD_LIGHTNING:
-			message = "was electrocuted by";
+			message = "blev stekt av";
 			break;
 		case MOD_BFG:
 		case MOD_BFG_SPLASH:
-			message = "was blasted by";
+			message = "blev sprängd av";
 			message2 = "'s BFG";
 			break;
 #ifdef MISSIONPACK
 		case MOD_NAIL:
-			message = "was nailed by";
+			message = "spikades av";
 			break;
 		case MOD_CHAINGUN:
-			message = "got lead poisoning from";
-			message2 = "'s Chaingun";
+			message = "fick blyförgiftning av";
+			message2 = "'s kulspruta";
 			break;
 		case MOD_PROXIMITY_MINE:
-			message = "was too close to";
-			message2 = "'s Prox Mine";
+			message = "var för nära";
+			message2 = "'s mina";
 			break;
 		case MOD_KAMIKAZE:
-			message = "falls to";
-			message2 = "'s Kamikaze blast";
+			message = "föll för";
+			message2 = "'s självmordsattack";
 			break;
 		case MOD_JUICED:
-			message = "was juiced by";
+			message = "blev pressad av";
 			break;
 #endif
 		case MOD_TELEFRAG:
-			message = "tried to invade";
-			message2 = "'s personal space";
+			message = "försökte bli närgången på";
 			break;
 		default:
-			message = "was killed by";
+			message = "blev dödad av";
 			break;
 		}
 
@@ -331,7 +304,7 @@ static void CG_Obituary( entityState_t *ent ) {
 	}
 
 	// we don't know what it was
-	CG_Printf( "%s died.\n", targetName );
+	CG_Printf( "%s dog.\n", targetName );
 }
 
 //==========================================================================
@@ -824,14 +797,14 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 	//
 	case EV_PLAYER_TELEPORT_IN:
 		DEBUGNAME("EV_PLAYER_TELEPORT_IN");
-		trap_S_StartSound (NULL, es->number, CHAN_AUTO, cgs.media.teleInSound );
-		CG_SpawnEffect( position);
+		//trap_S_StartSound (NULL, es->number, CHAN_AUTO, cgs.media.teleInSound );
+		//CG_SpawnEffect( position);
 		break;
 
 	case EV_PLAYER_TELEPORT_OUT:
 		DEBUGNAME("EV_PLAYER_TELEPORT_OUT");
-		trap_S_StartSound (NULL, es->number, CHAN_AUTO, cgs.media.teleOutSound );
-		CG_SpawnEffect(  position);
+		//trap_S_StartSound (NULL, es->number, CHAN_AUTO, cgs.media.teleOutSound );
+		//CG_SpawnEffect(  position);
 		break;
 
 	case EV_ITEM_POP:
@@ -920,11 +893,11 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 		CG_MissileHitWall( es->weapon, 0, position, dir, IMPACTSOUND_METAL );
 		break;
 
-	case EV_RAILTRAIL:
+	case EV_SNIPERTRAIL:
 		DEBUGNAME("EV_RAILTRAIL");
-		cent->currentState.weapon = WP_RAILGUN;
+		cent->currentState.weapon = WP_SNIPERRIFLE;
 		// if the end was on a nomark surface, don't make an explosion
-		CG_RailTrail( ci, es->origin2, es->pos.trBase );
+		//CG_SniperTrail( ci, es->origin2, es->pos.trBase );
 		if ( es->eventParm != 255 ) {
 			ByteToDir( es->eventParm, dir );
 			CG_MissileHitWall( es->weapon, es->clientNum, position, dir, IMPACTSOUND_DEFAULT );

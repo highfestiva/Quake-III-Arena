@@ -999,10 +999,10 @@ void G_InitBots( qboolean restart ) {
 			trap_Cvar_Set( "timelimit", "0" );
 		}
 
-		if ( !fragLimit && !timeLimit ) {
-			trap_Cvar_Set( "fraglimit", "10" );
+		/*if ( !fragLimit && !timeLimit ) {
+			trap_Cvar_Set( "fraglimit", "0" );
 			trap_Cvar_Set( "timelimit", "0" );
-		}
+		}*/
 
 		basedelay = BOT_BEGIN_DELAY_BASE;
 		strValue = Info_ValueForKey( arenainfo, "special" );

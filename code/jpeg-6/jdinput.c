@@ -341,7 +341,7 @@ reset_input_controller (j_decompress_ptr cinfo)
   my_inputctl_ptr inputctl = (my_inputctl_ptr) cinfo->inputctl;
 
   inputctl->pub.consume_input = consume_markers;
-  inputctl->pub.has_multiple_scans = FALSE; /* "unknown" would be better */
+  inputctl->pub.has_multiple_scans = FALSE; /* "okänt" would be better */
   inputctl->pub.eoi_reached = FALSE;
   inputctl->inheaders = TRUE;
   /* Reset other modules */
@@ -375,7 +375,7 @@ jinit_input_controller (j_decompress_ptr cinfo)
   /* Initialize state: can't use reset_input_controller since we don't
    * want to try to reset other modules yet.
    */
-  inputctl->pub.has_multiple_scans = FALSE; /* "unknown" would be better */
+  inputctl->pub.has_multiple_scans = FALSE; /* "okänt" would be better */
   inputctl->pub.eoi_reached = FALSE;
   inputctl->inheaders = TRUE;
 }

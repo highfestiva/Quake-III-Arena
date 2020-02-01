@@ -209,10 +209,10 @@ static void CG_NailgunEjectBrass( centity_t *cent ) {
 
 /*
 ==========================
-CG_RailTrail
+CG_SniperTrail
 ==========================
 */
-void CG_RailTrail (clientInfo_t *ci, vec3_t start, vec3_t end) {
+void CG_SniperTrail (clientInfo_t *ci, vec3_t start, vec3_t end) {
 	vec3_t axis[36], move, move2, next_move, vec, temp;
 	float  len;
 	int    i, j, skip;
@@ -238,12 +238,12 @@ void CG_RailTrail (clientInfo_t *ci, vec3_t start, vec3_t end) {
  
 	le->leType = LE_FADE_RGB;
 	le->startTime = cg.time;
-	le->endTime = cg.time + cg_railTrailTime.value;
+	le->endTime = cg.time + cg_sniperTrailTime.value;
 	le->lifeRate = 1.0 / (le->endTime - le->startTime);
  
 	re->shaderTime = cg.time / 1000.0f;
-	re->reType = RT_RAIL_CORE;
-	re->customShader = cgs.media.railCoreShader;
+	re->reType = RT_SNIPER_CORE;
+	re->customShader = cgs.media.sniperCoreShader;
  
 	VectorCopy(start, re->origin);
 	VectorCopy(end, re->oldorigin);
@@ -264,7 +264,7 @@ void CG_RailTrail (clientInfo_t *ci, vec3_t start, vec3_t end) {
 	VectorCopy(move, next_move);
 	VectorScale (vec, SPACING, vec);
 
-	if (cg_oldRail.integer != 0) {
+	if (cg_oldSniper.integer != 0) {
 		// nudge down a bit so it isn't exactly in center
 		re->origin[2] -= 8;
 		re->oldorigin[2] -= 8;
@@ -287,7 +287,7 @@ void CG_RailTrail (clientInfo_t *ci, vec3_t start, vec3_t end) {
             re->shaderTime = cg.time / 1000.0f;
             re->reType = RT_SPRITE;
             re->radius = 1.1f;
-			re->customShader = cgs.media.railRingsShader;
+			re->customShader = cgs.media.sniperRingsShader;
 
             re->shaderRGBA[0] = ci->color2[0] * 255;
             re->shaderRGBA[1] = ci->color2[1] * 255;
@@ -525,7 +525,7 @@ static void CG_PlasmaTrail( centity_t *cent, const weaponInfo_t *wi ) {
     re->shaderTime = cg.time / 1000.0f;
     re->reType = RT_SPRITE;
     re->radius = 0.25f;
-	re->customShader = cgs.media.railRingsShader;
+	re->customShader = cgs.media.sniperRingsShader;
 	le->bounceFactor = 0.3f;
 
     re->shaderRGBA[0] = wi->flashDlightColor[0] * 63;
@@ -711,13 +711,10 @@ void CG_RegisterWeapon( int weaponNum ) {
 
 #ifdef MISSIONPACK
 	case WP_CHAINGUN:
-		weaponInfo->firingSound = trap_S_RegisterSound( "sound/weapons/vulcan/wvulfire.wav", qfalse );
+		weaponInfo->firingSound = trap_S_RegisterSound( "sound/weapons/vulcan/fstrun.wav", qfalse );
 		weaponInfo->loopFireSound = qtrue;
 		MAKERGB( weaponInfo->flashDlightColor, 1, 1, 0 );
-		weaponInfo->flashSound[0] = trap_S_RegisterSound( "sound/weapons/vulcan/vulcanf1b.wav", qfalse );
-		weaponInfo->flashSound[1] = trap_S_RegisterSound( "sound/weapons/vulcan/vulcanf2b.wav", qfalse );
-		weaponInfo->flashSound[2] = trap_S_RegisterSound( "sound/weapons/vulcan/vulcanf3b.wav", qfalse );
-		weaponInfo->flashSound[3] = trap_S_RegisterSound( "sound/weapons/vulcan/vulcanf4b.wav", qfalse );
+		weaponInfo->flashSound[0] = trap_S_RegisterSound( "sound/weapons/vulcan/fire1.wav", qfalse );
 		weaponInfo->ejectBrassFunc = CG_MachineGunEjectBrass;
 		cgs.media.bulletExplosionShader = trap_R_RegisterShader( "bulletExplosion" );
 		break;
@@ -772,7 +769,7 @@ void CG_RegisterWeapon( int weaponNum ) {
 		weaponInfo->wiTrailTime = 700;
 		weaponInfo->trailRadius = 32;
 		MAKERGB( weaponInfo->flashDlightColor, 1, 0.70f, 0 );
-		weaponInfo->flashSound[0] = trap_S_RegisterSound( "sound/weapons/grenade/grenlf1a.wav", qfalse );
+		weaponInfo->flashSound[0] = trap_S_RegisterSound( "sound/weapons/proxmine/wstbfire.wav", qfalse );
 		cgs.media.grenadeExplosionShader = trap_R_RegisterShader( "grenadeExplosion" );
 		break;
 
@@ -796,16 +793,17 @@ void CG_RegisterWeapon( int weaponNum ) {
 		MAKERGB( weaponInfo->flashDlightColor, 0.6f, 0.6f, 1.0f );
 		weaponInfo->flashSound[0] = trap_S_RegisterSound( "sound/weapons/plasma/hyprbf1a.wav", qfalse );
 		cgs.media.plasmaExplosionShader = trap_R_RegisterShader( "plasmaExplosion" );
-		cgs.media.railRingsShader = trap_R_RegisterShader( "railDisc" );
+		cgs.media.sniperRingsShader = trap_R_RegisterShader( "railDisc" );
 		break;
 
-	case WP_RAILGUN:
-		weaponInfo->readySound = trap_S_RegisterSound( "sound/weapons/railgun/rg_hum.wav", qfalse );
+	case WP_SNIPERRIFLE:
+		//weaponInfo->readySound = trap_S_RegisterSound( "sound/weapons/railgun/rg_hum.wav", qfalse );
 		MAKERGB( weaponInfo->flashDlightColor, 1, 0.5f, 0 );
-		weaponInfo->flashSound[0] = trap_S_RegisterSound( "sound/weapons/railgun/railgf1a.wav", qfalse );
-		cgs.media.railExplosionShader = trap_R_RegisterShader( "railExplosion" );
-		cgs.media.railRingsShader = trap_R_RegisterShader( "railDisc" );
-		cgs.media.railCoreShader = trap_R_RegisterShader( "railCore" );
+		weaponInfo->flashSound[0] = trap_S_RegisterSound( "sound/weapons/railgun/fire1.wav", qfalse );
+		weaponInfo->ejectBrassFunc = CG_MachineGunEjectBrass;
+		cgs.media.sniperExplosionShader = trap_R_RegisterShader("bulletExplosion");
+		cgs.media.sniperRingsShader = trap_R_RegisterShader("railDisc");
+		cgs.media.sniperCoreShader = trap_R_RegisterShader("railCore");
 		break;
 
 	case WP_BFG:
@@ -1125,24 +1123,24 @@ static void CG_LightningBolt( centity_t *cent, vec3_t origin ) {
 
 /*
 ===============
-CG_SpawnRailTrail
+CG_SpawnSniperTrail
 
 Origin will be the exact tag point, which is slightly
 different than the muzzle point used for determining hits.
 ===============
 */
-static void CG_SpawnRailTrail( centity_t *cent, vec3_t origin ) {
+static void CG_SpawnSniperTrail( centity_t *cent, vec3_t origin ) {
 	clientInfo_t	*ci;
 
-	if ( cent->currentState.weapon != WP_RAILGUN ) {
+	if ( cent->currentState.weapon != WP_SNIPERRIFLE ) {
 		return;
 	}
-	if ( !cent->pe.railgunFlash ) {
+	if ( !cent->pe.sniperrifleFlash ) {
 		return;
 	}
-	cent->pe.railgunFlash = qtrue;
+	cent->pe.sniperrifleFlash = qtrue;
 	ci = &cgs.clientinfo[ cent->currentState.clientNum ];
-	CG_RailTrail( ci, origin, cent->pe.railgunImpact );
+	//CG_SniperTrail( ci, origin, cent->pe.sniperrifleImpact );
 }
 
 
@@ -1240,9 +1238,9 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 	gun.shadowPlane = parent->shadowPlane;
 	gun.renderfx = parent->renderfx;
 
-	// set custom shading for railgun refire rate
+	// set custom shading for sniper rifle refire rate
 	if ( ps ) {
-		if ( cg.predictedPlayerState.weapon == WP_RAILGUN 
+		if ( cg.predictedPlayerState.weapon == WP_SNIPERRIFLE
 			&& cg.predictedPlayerState.weaponstate == WEAPON_FIRING ) {
 			float	f;
 
@@ -1314,7 +1312,7 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 		// continuous flash
 	} else {
 		// impulse flash
-		if ( cg.time - cent->muzzleFlashTime > MUZZLE_FLASH_TIME && !cent->pe.railgunFlash ) {
+		if ( cg.time - cent->muzzleFlashTime > MUZZLE_FLASH_TIME && !cent->pe.sniperrifleFlash ) {
 			return;
 		}
 	}
@@ -1333,8 +1331,8 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 	angles[ROLL] = crandom() * 10;
 	AnglesToAxis( angles, flash.axis );
 
-	// colorize the railgun blast
-	if ( weaponNum == WP_RAILGUN ) {
+	// colorize the sniper rifle blast
+	if ( weaponNum == WP_SNIPERRIFLE ) {
 		clientInfo_t	*ci;
 
 		ci = &cgs.clientinfo[ cent->currentState.clientNum ];
@@ -1351,8 +1349,8 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 		// add lightning bolt
 		CG_LightningBolt( nonPredictedCent, flash.origin );
 
-		// add rail trail
-		CG_SpawnRailTrail( cent, flash.origin );
+		// add sniper trail
+		CG_SpawnSniperTrail( cent, flash.origin );
 
 		if ( weapon->flashDlightColor[0] || weapon->flashDlightColor[1] || weapon->flashDlightColor[2] ) {
 			trap_R_AddLightToScene( flash.origin, 300 + (rand()&31), weapon->flashDlightColor[0],
@@ -1823,8 +1821,8 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 		shader = cgs.media.grenadeExplosionShader;
 		sfx = cgs.media.sfx_rockexp;
 		mark = cgs.media.burnMarkShader;
-		radius = 64;
-		light = 300;
+		radius = 128;
+		light = 600;
 		isSprite = qtrue;
 		break;
 	case WP_ROCKET_LAUNCHER:
@@ -1832,8 +1830,8 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 		shader = cgs.media.rocketExplosionShader;
 		sfx = cgs.media.sfx_rockexp;
 		mark = cgs.media.burnMarkShader;
-		radius = 64;
-		light = 300;
+		radius = 128;
+		light = 600;
 		isSprite = qtrue;
 		duration = 1000;
 		lightColor[0] = 1;
@@ -1847,12 +1845,18 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 			CG_ParticleExplosion( "explode1", sprOrg, sprVel, 1400, 20, 30 );
 		}
 		break;
-	case WP_RAILGUN:
-		mod = cgs.media.ringFlashModel;
-		shader = cgs.media.railExplosionShader;
-		sfx = cgs.media.sfx_plasmaexp;
-		mark = cgs.media.energyMarkShader;
-		radius = 24;
+	case WP_SNIPERRIFLE:
+		mod = cgs.media.bulletFlashModel;
+		shader = cgs.media.sniperExplosionShader;
+		if( soundType == IMPACTSOUND_FLESH ) {
+			sfx = cgs.media.sfx_nghitflesh;
+		} else if( soundType == IMPACTSOUND_METAL ) {
+			sfx = cgs.media.sfx_nghitmetal;
+		} else {
+			sfx = cgs.media.sfx_nghit;
+		}
+		mark = cgs.media.bulletMarkShader;
+		radius = 1;
 		break;
 	case WP_PLASMAGUN:
 		mod = cgs.media.ringFlashModel;
@@ -1928,12 +1932,10 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 	// create the explosion
 	//
 	if ( mod ) {
-		le = CG_MakeExplosion( origin, dir, 
-							   mod,	shader,
-							   duration, isSprite );
+		le = CG_MakeExplosion( origin, dir, mod, shader, duration, isSprite );
 		le->light = light;
 		VectorCopy( lightColor, le->lightColor );
-		if ( weapon == WP_RAILGUN ) {
+		if ( weapon == WP_SNIPERRIFLE ) {
 			// colorize with client color
 			VectorCopy( cgs.clientinfo[clientNum].color1, le->color );
 		}
@@ -1943,13 +1945,13 @@ void CG_MissileHitWall( int weapon, int clientNum, vec3_t origin, vec3_t dir, im
 	// impact mark
 	//
 	alphaFade = (mark == cgs.media.energyMarkShader);	// plasma fades alpha, all others fade color
-	if ( weapon == WP_RAILGUN ) {
+	/*if ( weapon == WP_SNIPERRIFLE ) {
 		float	*color;
 
 		// colorize with client color
 		color = cgs.clientinfo[clientNum].color2;
 		CG_ImpactMark( mark, origin, dir, random()*360, color[0],color[1], color[2],1, alphaFade, radius, qfalse );
-	} else {
+	} else*/ {
 		CG_ImpactMark( mark, origin, dir, random()*360, 1,1,1,1, alphaFade, radius, qfalse );
 	}
 }

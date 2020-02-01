@@ -111,7 +111,10 @@ void G_InitSessionData( gclient_t *client, char *userinfo ) {
 	// initial team determination
 	if ( g_gametype.integer >= GT_TEAM ) {
 		if ( g_teamAutoJoin.integer ) {
-			sess->sessionTeam = PickTeam( -1 );
+			//if (human)
+				sess->sessionTeam = TEAM_RED;
+			//else //if (bot)
+			//	sess->sessionTeam = TEAM_BLUW;
 			BroadcastTeamChange( client, -1 );
 		} else {
 			// always spawn as spectator in team games
@@ -161,7 +164,11 @@ G_InitWorldSession
 */
 void G_InitWorldSession( void ) {
 	char	s[MAX_STRING_CHARS];
+	char	cur_map[MAX_STRING_CHARS];
 	int			gt;
+
+	trap_Cvar_VariableStringBuffer( "mapname", cur_map, sizeof(cur_map) );
+	trap_Cvar_Set("currentmap", cur_map);
 
 	trap_Cvar_VariableStringBuffer( "session", s, sizeof(s) );
 	gt = atoi( s );

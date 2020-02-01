@@ -31,9 +31,9 @@ static void GfxInfo_f( void );
 cvar_t	*r_flareSize;
 cvar_t	*r_flareFade;
 
-cvar_t	*r_railWidth;
-cvar_t	*r_railCoreWidth;
-cvar_t	*r_railSegmentLength;
+cvar_t	*r_sniperWidth;
+cvar_t	*r_sniperCoreWidth;
+cvar_t	*r_sniperSegmentLength;
 
 cvar_t	*r_ignoreFastPath;
 
@@ -354,7 +354,7 @@ static void R_ModeList_f( void )
 NOTE TTimo
 some thoughts about the screenshots system:
 screenshots get written in fs_homepath + fs_gamedir
-vanilla q3 .. baseq3/screenshots/ *.tga
+vanilla q3 .. joopdata/screenshots/ *.tga
 team arena .. missionpack/screenshots/ *.tga
 
 two commands: "screenshot" and "screenshotJPEG"
@@ -936,9 +936,9 @@ void R_Register( void )
 #endif
 	r_facePlaneCull = ri.Cvar_Get ("r_facePlaneCull", "1", CVAR_ARCHIVE );
 
-	r_railWidth = ri.Cvar_Get( "r_railWidth", "16", CVAR_ARCHIVE );
-	r_railCoreWidth = ri.Cvar_Get( "r_railCoreWidth", "6", CVAR_ARCHIVE );
-	r_railSegmentLength = ri.Cvar_Get( "r_railSegmentLength", "32", CVAR_ARCHIVE );
+	r_sniperWidth = ri.Cvar_Get( "r_sniperWidth", "16", CVAR_ARCHIVE );
+	r_sniperCoreWidth = ri.Cvar_Get( "r_sniperCoreWidth", "6", CVAR_ARCHIVE );
+	r_sniperSegmentLength = ri.Cvar_Get( "r_sniperSegmentLength", "32", CVAR_ARCHIVE );
 
 	r_primitives = ri.Cvar_Get( "r_primitives", "0", CVAR_ARCHIVE );
 

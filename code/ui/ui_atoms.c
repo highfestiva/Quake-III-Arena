@@ -125,7 +125,7 @@ void UI_SetBestScores(postGameInfo_t *newInfo, qboolean postGame) {
 	trap_Cvar_Set("ui_scoreGauntlets", 		va("%i", newInfo->gauntlets));
 	trap_Cvar_Set("ui_scoreScore", 				va("%i", newInfo->score));
 	trap_Cvar_Set("ui_scorePerfect",	 		va("%i", newInfo->perfects));
-	trap_Cvar_Set("ui_scoreTeam",					va("%i to %i", newInfo->redScore, newInfo->blueScore));
+	trap_Cvar_Set("ui_scoreTeam",					va("%i mot %i", newInfo->redScore, newInfo->blueScore));
 	trap_Cvar_Set("ui_scoreBase",					va("%i", newInfo->baseScore));
 	trap_Cvar_Set("ui_scoreTimeBonus",		va("%i", newInfo->timeBonus));
 	trap_Cvar_Set("ui_scoreSkillBonus",		va("%i", newInfo->skillBonus));

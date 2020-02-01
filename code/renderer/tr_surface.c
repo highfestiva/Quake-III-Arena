@@ -335,7 +335,7 @@ void RB_SurfaceBeam( void )
 
 //================================================================================
 
-static void DoRailCore( const vec3_t start, const vec3_t end, const vec3_t up, float len, float spanWidth )
+static void DoSniperCore( const vec3_t start, const vec3_t end, const vec3_t up, float len, float spanWidth )
 {
 	float		spanWidth2;
 	int			vbase;
@@ -388,12 +388,12 @@ static void DoRailCore( const vec3_t start, const vec3_t end, const vec3_t up, f
 	tess.indexes[tess.numIndexes++] = vbase + 3;
 }
 
-static void DoRailDiscs( int numSegs, const vec3_t start, const vec3_t dir, const vec3_t right, const vec3_t up )
+static void DoSniperDiscs( int numSegs, const vec3_t start, const vec3_t dir, const vec3_t right, const vec3_t up )
 {
 	int i;
 	vec3_t	pos[4];
 	vec3_t	v;
-	int		spanWidth = r_railWidth->integer;
+	int		spanWidth = r_sniperWidth->integer;
 	float c, s;
 	float		scale;
 
@@ -449,9 +449,9 @@ static void DoRailDiscs( int numSegs, const vec3_t start, const vec3_t dir, cons
 }
 
 /*
-** RB_SurfaceRailRinges
+** RB_SurfaceSniperRinges
 */
-void RB_SurfaceRailRings( void ) {
+void RB_SurfaceSniperRings( void ) {
 	refEntity_t *e;
 	int			numSegs;
 	int			len;
@@ -468,20 +468,20 @@ void RB_SurfaceRailRings( void ) {
 	VectorSubtract( end, start, vec );
 	len = VectorNormalize( vec );
 	MakeNormalVectors( vec, right, up );
-	numSegs = ( len ) / r_railSegmentLength->value;
+	numSegs = ( len ) / r_sniperSegmentLength->value;
 	if ( numSegs <= 0 ) {
 		numSegs = 1;
 	}
 
-	VectorScale( vec, r_railSegmentLength->value, vec );
+	VectorScale( vec, r_sniperSegmentLength->value, vec );
 
-	DoRailDiscs( numSegs, start, vec, right, up );
+	DoSniperDiscs( numSegs, start, vec, right, up );
 }
 
 /*
-** RB_SurfaceRailCore
+** RB_SurfaceSniperCore
 */
-void RB_SurfaceRailCore( void ) {
+void RB_SurfaceSniperCore( void ) {
 	refEntity_t *e;
 	int			len;
 	vec3_t		right;
@@ -505,7 +505,7 @@ void RB_SurfaceRailCore( void ) {
 	CrossProduct( v1, v2, right );
 	VectorNormalize( right );
 
-	DoRailCore( start, end, right, len, r_railCoreWidth->integer );
+	DoSniperCore( start, end, right, len, r_sniperCoreWidth->integer );
 }
 
 /*
@@ -540,7 +540,7 @@ void RB_SurfaceLightningBolt( void ) {
 	for ( i = 0 ; i < 4 ; i++ ) {
 		vec3_t	temp;
 
-		DoRailCore( start, end, right, len, 8 );
+		DoSniperCore( start, end, right, len, 8 );
 		RotatePointAroundVector( temp, vec, right, 45 );
 		VectorCopy( temp, right );
 	}
@@ -1105,11 +1105,11 @@ void RB_SurfaceEntity( surfaceType_t *surfType ) {
 	case RT_BEAM:
 		RB_SurfaceBeam();
 		break;
-	case RT_RAIL_CORE:
-		RB_SurfaceRailCore();
+	case RT_SNIPER_CORE:
+		RB_SurfaceSniperCore();
 		break;
-	case RT_RAIL_RINGS:
-		RB_SurfaceRailRings();
+	case RT_SNIPER_RINGS:
+		RB_SurfaceSniperRings();
 		break;
 	case RT_LIGHTNING:
 		RB_SurfaceLightningBolt();

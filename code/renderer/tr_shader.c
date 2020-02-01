@@ -3009,5 +3009,5 @@ void R_InitShaders( void ) {
 
 	ScanAndLoadShaderFiles();
 
-	CreateExternalShaders();
+	//CreateExternalShaders();
 }

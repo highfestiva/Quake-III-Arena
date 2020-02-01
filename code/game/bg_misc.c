@@ -192,10 +192,10 @@ gitem_t	bg_itemlist[] =
 	{
 		"weapon_gauntlet", 
 		"sound/misc/w_pkup.wav",
-        { "models/weapons2/gauntlet/gauntlet.md3",
+        { "models/weapons2/Mixer/Mixer.md3",
 		0, 0, 0},
-/* icon */		"icons/iconw_gauntlet",
-/* pickup */	"Gauntlet",
+/* icon */		"icons/iconw_Mixer",
+/* pickup */	"Elvisp",
 		0,
 		IT_WEAPON,
 		WP_GAUNTLET,
@@ -211,7 +211,7 @@ gitem_t	bg_itemlist[] =
         { "models/weapons2/shotgun/shotgun.md3", 
 		0, 0, 0},
 /* icon */		"icons/iconw_shotgun",
-/* pickup */	"Shotgun",
+/* pickup */	"Hagelgevär",
 		10,
 		IT_WEAPON,
 		WP_SHOTGUN,
@@ -224,10 +224,10 @@ gitem_t	bg_itemlist[] =
 	{
 		"weapon_machinegun", 
 		"sound/misc/w_pkup.wav",
-        { "models/weapons2/machinegun/machinegun.md3", 
+        { "models/weapons2/Uzi/Uzi.md3",
 		0, 0, 0},
-/* icon */		"icons/iconw_machinegun",
-/* pickup */	"Machinegun",
+/* icon */		"icons/iconw_Uzi",
+/* pickup */	"Uzi",
 		40,
 		IT_WEAPON,
 		WP_MACHINEGUN,
@@ -243,12 +243,17 @@ gitem_t	bg_itemlist[] =
         { "models/weapons2/grenadel/grenadel.md3", 
 		0, 0, 0},
 /* icon */		"icons/iconw_grenade",
-/* pickup */	"Grenade Launcher",
+/* pickup */	"Granatkastare",
 		10,
 		IT_WEAPON,
 		WP_GRENADE_LAUNCHER,
 /* precache */ "",
-/* sounds */ "sound/weapons/grenade/hgrenb1a.wav sound/weapons/grenade/hgrenb2a.wav"
+/* sounds */ "sound/weapons/proxmine/wstbtick.wav "
+			"sound/weapons/proxmine/wstbactv.wav "
+			"sound/weapons/proxmine/wstbimpl.wav "
+			"sound/weapons/proxmine/wstbimpm.wav "
+			"sound/weapons/proxmine/wstbimpd.wav "
+			"sound/weapons/proxmine/wstbactv.wav"
 	},
 
 /*QUAKED weapon_rocketlauncher (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
@@ -259,7 +264,7 @@ gitem_t	bg_itemlist[] =
         { "models/weapons2/rocketl/rocketl.md3", 
 		0, 0, 0},
 /* icon */		"icons/iconw_rocket",
-/* pickup */	"Rocket Launcher",
+/* pickup */	"Raketgevär",
 		10,
 		IT_WEAPON,
 		WP_ROCKET_LAUNCHER,
@@ -272,7 +277,8 @@ gitem_t	bg_itemlist[] =
 	{
 		"weapon_lightning", 
 		"sound/misc/w_pkup.wav",
-        { "models/weapons2/lightning/lightning.md3", 
+        { //"models/weapons2/lightning/lightning.md3",
+		"models/weapons2/plasma/plasma.md3",	// Jonte: try the lightning gun...
 		0, 0, 0},
 /* icon */		"icons/iconw_lightning",
 /* pickup */	"Lightning Gun",
@@ -283,7 +289,7 @@ gitem_t	bg_itemlist[] =
 /* sounds */ ""
 	},
 
-/*QUAKED weapon_railgun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
+/*QUAKED weapon_sniperrifle (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
 */
 	{
 		"weapon_railgun", 
@@ -291,10 +297,10 @@ gitem_t	bg_itemlist[] =
         { "models/weapons2/railgun/railgun.md3", 
 		0, 0, 0},
 /* icon */		"icons/iconw_railgun",
-/* pickup */	"Railgun",
+/* pickup */	"Älgstudsare",
 		10,
 		IT_WEAPON,
-		WP_RAILGUN,
+		WP_SNIPERRIFLE,
 /* precache */ "",
 /* sounds */ ""
 	},
@@ -359,7 +365,7 @@ gitem_t	bg_itemlist[] =
         { "models/powerups/ammo/shotgunam.md3", 
 		0, 0, 0},
 /* icon */		"icons/icona_shotgun",
-/* pickup */	"Shells",
+/* pickup */	"Hagel",
 		10,
 		IT_AMMO,
 		WP_SHOTGUN,
@@ -375,7 +381,7 @@ gitem_t	bg_itemlist[] =
         { "models/powerups/ammo/machinegunam.md3", 
 		0, 0, 0},
 /* icon */		"icons/icona_machinegun",
-/* pickup */	"Bullets",
+/* pickup */	"Kulor",
 		50,
 		IT_AMMO,
 		WP_MACHINEGUN,
@@ -391,7 +397,7 @@ gitem_t	bg_itemlist[] =
         { "models/powerups/ammo/grenadeam.md3", 
 		0, 0, 0},
 /* icon */		"icons/icona_grenade",
-/* pickup */	"Grenades",
+/* pickup */	"Granater",
 		5,
 		IT_AMMO,
 		WP_GRENADE_LAUNCHER,
@@ -439,7 +445,7 @@ gitem_t	bg_itemlist[] =
         { "models/powerups/ammo/rocketam.md3", 
 		0, 0, 0},
 /* icon */		"icons/icona_rocket",
-/* pickup */	"Rockets",
+/* pickup */	"Raketer",
 		5,
 		IT_AMMO,
 		WP_ROCKET_LAUNCHER,
@@ -455,10 +461,10 @@ gitem_t	bg_itemlist[] =
         { "models/powerups/ammo/railgunam.md3", 
 		0, 0, 0},
 /* icon */		"icons/icona_railgun",
-/* pickup */	"Slugs",
+/* pickup */	"Patroner",
 		10,
 		IT_AMMO,
-		WP_RAILGUN,
+		WP_SNIPERRIFLE,
 /* precache */ "",
 /* sounds */ ""
 	},
@@ -490,7 +496,7 @@ gitem_t	bg_itemlist[] =
         { "models/powerups/holdable/teleporter.md3", 
 		0, 0, 0},
 /* icon */		"icons/teleporter",
-/* pickup */	"Personal Teleporter",
+/* pickup */	"Personlig teleporter",
 		60,
 		IT_HOLDABLE,
 		HI_TELEPORTER,
@@ -507,7 +513,7 @@ gitem_t	bg_itemlist[] =
 		"models/powerups/holdable/medkit_sphere.md3",
 		0, 0},
 /* icon */		"icons/medkit",
-/* pickup */	"Medkit",
+/* pickup */	"Första hjälpen",
 		60,
 		IT_HOLDABLE,
 		HI_MEDKIT,
@@ -711,7 +717,7 @@ Only in CTF games
         { "models/powerups/ammo/nailgunam.md3", 
 		0, 0, 0},
 /* icon */		"icons/icona_nailgun",
-/* pickup */	"Nails",
+/* pickup */	"Spikar",
 		20,
 		IT_AMMO,
 		WP_NAILGUN,
@@ -743,7 +749,7 @@ Only in CTF games
         { "models/powerups/ammo/chaingunam.md3", 
 		0, 0, 0},
 /* icon */		"icons/icona_chaingun",
-/* pickup */	"Chaingun Belt",
+/* pickup */	"Kulspruteband",
 		100,
 		IT_AMMO,
 		WP_CHAINGUN,
@@ -904,10 +910,10 @@ Only in One Flag CTF games
 	{
 		"weapon_chaingun", 
 		"sound/misc/w_pkup.wav",
-        { "models/weapons/vulcan/vulcan.md3", 
+        { "models/weapons2/machinegun/machinegun.md3", 
 		0, 0, 0},
-/* icon */		"icons/iconw_chaingun",
-/* pickup */	"Chaingun",
+/* icon */		"icons/iconw_bfg",
+/* pickup */	"Kulspruta",
 		80,
 		IT_WEAPON,
 		WP_CHAINGUN,
@@ -1053,7 +1059,7 @@ qboolean BG_CanItemBeGrabbed( int gametype, const entityState_t *ent, const play
 		return qtrue;	// weapons are always picked up
 
 	case IT_AMMO:
-		if ( ps->ammo[ item->giTag ] >= 200 ) {
+		if ( ps->ammo[ item->giTag ] >= 800 ) {
 			return qfalse;		// can't hold any more
 		}
 		return qtrue;

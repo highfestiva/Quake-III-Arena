@@ -385,6 +385,90 @@ void RE_RegisterFont(const char *fontName, int pointSize, fontInfo_t *font) {
 			Com_Memcpy(font->glyphs[i].shaderName, &fdFile[fdOffset], 32);
 			fdOffset += 32;
 		}
+//#if 0	// Jonte-0
+		// Jonte-TRICKY: hard-coded the åäöÅÄÖ glyphs for Swedish Jooperative.
+		if (12 == pointSize)
+		{
+			font->glyphs[134/*å*/].s = 97/256.0f;
+			font->glyphs[134/*å*/].t = 97/256.0f;
+			font->glyphs[134/*å*/].s2 = 105/256.0f;
+			font->glyphs[134/*å*/].t2 = 111/256.0f;
+			font->glyphs[132/*ä*/].s = 88/256.0f;
+			font->glyphs[132/*ä*/].t = 96/256.0f;
+			font->glyphs[132/*ä*/].s2 = 96/256.0f;
+			font->glyphs[132/*ä*/].t2 = 108/256.0f;
+			font->glyphs[148/*ö*/].s = 239/256.0f;
+			font->glyphs[148/*ö*/].t = 97/256.0f;
+			font->glyphs[148/*ö*/].s2 = 247/256.0f;
+			font->glyphs[148/*ö*/].t2 = 109/256.0f;
+			font->glyphs[143/*Å*/].s = 80/256.0f;
+			font->glyphs[143/*Å*/].t = 83/256.0f;
+			font->glyphs[143/*Å*/].s2 = 88/256.0f;
+			font->glyphs[143/*Å*/].t2 = 97/256.0f;
+			font->glyphs[142/*Ä*/].s = 71/256.0f;
+			font->glyphs[142/*Ä*/].t = 83/256.0f;
+			font->glyphs[142/*Ä*/].s2 = 79/256.0f;
+			font->glyphs[142/*Ä*/].t2 = 95/256.0f;
+			font->glyphs[153/*Ö*/].s = 213/256.0f;
+			font->glyphs[153/*Ö*/].t = 83/256.0f;
+			font->glyphs[153/*Ö*/].s2 = 221/256.0f;
+			font->glyphs[153/*Ö*/].t2 = 95/256.0f;
+		}
+		else if (16 == pointSize)
+		{
+			font->glyphs[134/*å*/].s = 53/256.0f;
+			font->glyphs[134/*å*/].t = 143/256.0f;
+			font->glyphs[134/*å*/].s2 = 62/256.0f;
+			font->glyphs[134/*å*/].t2 = 159/256.0f;
+			font->glyphs[132/*ä*/].s = 44/256.0f;
+			font->glyphs[132/*ä*/].t = 143/256.0f;
+			font->glyphs[132/*ä*/].s2 = 52/256.0f;
+			font->glyphs[132/*ä*/].t2 = 157/256.0f;
+			font->glyphs[148/*ö*/].s = 210/256.0f;
+			font->glyphs[148/*ö*/].t = 143/256.0f;
+			font->glyphs[148/*ö*/].s2 = 219/256.0f;
+			font->glyphs[148/*ö*/].t2 = 157/256.0f;
+			font->glyphs[143/*Å*/].s = 0/256.0f;
+			font->glyphs[143/*Å*/].t = 125/256.0f;
+			font->glyphs[143/*Å*/].s2 = 10/256.0f;
+			font->glyphs[143/*Å*/].t2 = 143/256.0f;
+			font->glyphs[142/*Ä*/].s = 240/256.0f;
+			font->glyphs[142/*Ä*/].t = 107/256.0f;
+			font->glyphs[142/*Ä*/].s2 = 250/256.0f;
+			font->glyphs[142/*Ä*/].t2 = 125/256.0f;
+			font->glyphs[153/*Ö*/].s = 160/256.0f;
+			font->glyphs[153/*Ö*/].t = 125/256.0f;
+			font->glyphs[153/*Ö*/].s2 = 168/256.0f;
+			font->glyphs[153/*Ö*/].t2 = 142/256.0f;
+		}
+		else if (16 == pointSize)
+		{
+			font->glyphs[134/*å*/].s = 9/256.0f;
+			font->glyphs[134/*å*/].t = 219/256.0f;
+			font->glyphs[134/*å*/].s2 = 17/256.0f;
+			font->glyphs[134/*å*/].t2 = 238/256.0f;
+			font->glyphs[132/*ä*/].s = 0/256.0f;
+			font->glyphs[132/*ä*/].t = 219/256.0f;
+			font->glyphs[132/*ä*/].s2 = 8/256.0f;
+			font->glyphs[132/*ä*/].t2 = 236/256.0f;
+			font->glyphs[148/*ö*/].s = 177/256.0f;
+			font->glyphs[148/*ö*/].t = 219/256.0f;
+			font->glyphs[148/*ö*/].s2 = 186/256.0f;
+			font->glyphs[148/*ö*/].t2 = 236/256.0f;
+			font->glyphs[143/*Å*/].s = 179/256.0f;
+			font->glyphs[143/*Å*/].t = 175/256.0f;
+			font->glyphs[143/*Å*/].s2 = 191/256.0f;
+			font->glyphs[143/*Å*/].t2 = 197/256.0f;
+			font->glyphs[142/*Ä*/].s = 166/256.0f;
+			font->glyphs[142/*Ä*/].t = 175/256.0f;
+			font->glyphs[142/*Ä*/].s2 = 177/256.0f;
+			font->glyphs[142/*Ä*/].t2 = 195/256.0f;
+			font->glyphs[153/*Ö*/].s = 101/256.0f;
+			font->glyphs[153/*Ö*/].t = 197/256.0f;
+			font->glyphs[153/*Ö*/].s2 = 110/256.0f;
+			font->glyphs[153/*Ö*/].t2 = 217/256.0f;
+		}
+//#endif // Jonte-0
 		font->glyphScale = readFloat();
 		Com_Memcpy(font->name, &fdFile[fdOffset], MAX_QPATH);
 

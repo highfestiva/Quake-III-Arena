@@ -176,10 +176,10 @@ void CG_DrawInformation( void ) {
 	// the first 150 rows are reserved for the client connection
 	// screen to write into
 	if ( cg.infoScreenText[0] ) {
-		UI_DrawProportionalString( 320, 128-32, va("Loading... %s", cg.infoScreenText),
+		UI_DrawProportionalString( 320, 128-32, va("Laddar... %s", cg.infoScreenText),
 			UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, colorWhite );
 	} else {
-		UI_DrawProportionalString( 320, 128-32, "Awaiting snapshot...",
+		UI_DrawProportionalString( 320, 128-32, "Väntar på avbildning...",
 			UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, colorWhite );
 	}
 
@@ -200,7 +200,7 @@ void CG_DrawInformation( void ) {
 		// pure server
 		s = Info_ValueForKey( sysInfo, "sv_pure" );
 		if ( s[0] == '1' ) {
-			UI_DrawProportionalString( 320, y, "Pure Server",
+			UI_DrawProportionalString( 320, y, "Ren server",
 				UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, colorWhite );
 			y += PROP_HEIGHT;
 		}
@@ -220,7 +220,9 @@ void CG_DrawInformation( void ) {
 	// map-specific message (long map name)
 	s = CG_ConfigString( CS_MESSAGE );
 	if ( s[0] ) {
-		UI_DrawProportionalString( 320, y, s,
+		char lAnsiText[100];
+		CG_JbConvertMultiByteToAnsi(lAnsiText, s);
+		UI_DrawProportionalString( 320, y, lAnsiText,
 			UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, colorWhite );
 		y += PROP_HEIGHT;
 	}
@@ -228,7 +230,7 @@ void CG_DrawInformation( void ) {
 	// cheats warning
 	s = Info_ValueForKey( sysInfo, "sv_cheats" );
 	if ( s[0] == '1' ) {
-		UI_DrawProportionalString( 320, y, "CHEATS ARE ENABLED",
+		UI_DrawProportionalString( 320, y, "FUSK AKTIVT",
 			UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, colorWhite );
 		y += PROP_HEIGHT;
 	}
@@ -236,33 +238,33 @@ void CG_DrawInformation( void ) {
 	// game type
 	switch ( cgs.gametype ) {
 	case GT_FFA:
-		s = "Free For All";
+		s = "Fritt för alla";
 		break;
 	case GT_SINGLE_PLAYER:
-		s = "Single Player";
+		s = "Enspelarläge";
 		break;
 	case GT_TOURNAMENT:
-		s = "Tournament";
+		s = "Turnering";
 		break;
 	case GT_TEAM:
-		s = "Team Deathmatch";
+		s = "Jooperative-mode";
 		break;
 	case GT_CTF:
-		s = "Capture The Flag";
+		s = "Fånga flaggan";
 		break;
 #ifdef MISSIONPACK
 	case GT_1FCTF:
-		s = "One Flag CTF";
+		s = "Fånga enda flaggan";
 		break;
 	case GT_OBELISK:
-		s = "Overload";
+		s = "Överbelastning";
 		break;
 	case GT_HARVESTER:
-		s = "Harvester";
+		s = "Skördare";
 		break;
 #endif
 	default:
-		s = "Unknown Gametype";
+		s = "Okänd speltyp";
 		break;
 	}
 	UI_DrawProportionalString( 320, y, s,
@@ -271,7 +273,7 @@ void CG_DrawInformation( void ) {
 		
 	value = atoi( Info_ValueForKey( info, "timelimit" ) );
 	if ( value ) {
-		UI_DrawProportionalString( 320, y, va( "timelimit %i", value ),
+		UI_DrawProportionalString( 320, y, va( "Tidsgräns %i", value ),
 			UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, colorWhite );
 		y += PROP_HEIGHT;
 	}
@@ -279,7 +281,7 @@ void CG_DrawInformation( void ) {
 	if (cgs.gametype < GT_CTF ) {
 		value = atoi( Info_ValueForKey( info, "fraglimit" ) );
 		if ( value ) {
-			UI_DrawProportionalString( 320, y, va( "fraglimit %i", value ),
+			UI_DrawProportionalString( 320, y, va( "Frag-gräns %i", value ),
 				UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, colorWhite );
 			y += PROP_HEIGHT;
 		}
@@ -288,7 +290,7 @@ void CG_DrawInformation( void ) {
 	if (cgs.gametype >= GT_CTF) {
 		value = atoi( Info_ValueForKey( info, "capturelimit" ) );
 		if ( value ) {
-			UI_DrawProportionalString( 320, y, va( "capturelimit %i", value ),
+			UI_DrawProportionalString( 320, y, va( "Fånga-gräns %i", value ),
 				UI_CENTER|UI_SMALLFONT|UI_DROPSHADOW, colorWhite );
 			y += PROP_HEIGHT;
 		}

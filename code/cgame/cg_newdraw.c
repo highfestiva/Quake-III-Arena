@@ -430,27 +430,58 @@ static void CG_DrawSelectedPlayerName( rectDef_t *rect, float scale, vec4_t colo
   }
 }
 
+void CG_JbConvertMultiByteToAnsi(char* pAnsiText, const unsigned char* pMultiByteText)
+{
+	for (; *pMultiByteText; ++pAnsiText)
+	{
+		int x = 1;
+		unsigned lCharacter = ((unsigned)pMultiByteText[0]<<8)|pMultiByteText[1];
+		switch (lCharacter)
+		{
+			case 0xC3A5:	*pAnsiText = 'å'; x = 2;	break;
+			case 0xC3A4:	*pAnsiText = 'ä'; x = 2;	break;
+			case 0xC3B6:	*pAnsiText = 'ö'; x = 2;	break;
+			case 0xC385:	*pAnsiText = 'Å'; x = 2;	break;
+			case 0xC384:	*pAnsiText = 'Ä'; x = 2;	break;
+			case 0xC396:	*pAnsiText = 'Ö'; x = 2;	break;
+			default:	*pAnsiText = *pMultiByteText;	break;
+		}
+		pMultiByteText += x;
+	}
+	*pAnsiText = '\0';
+}
+
 static void CG_DrawSelectedPlayerLocation( rectDef_t *rect, float scale, vec4_t color, int textStyle ) {
 	clientInfo_t *ci;
-  ci = cgs.clientinfo + sortedTeamPlayers[CG_GetSelectedPlayer()];
-  if (ci) {
+	ci = cgs.clientinfo + sortedTeamPlayers[CG_GetSelectedPlayer()];
+	if (ci)
+	{
+		// Jonte: converting shitty GtkRadiant's multi byte texts.
+		char lAnsiText[100];
 		const char *p = CG_ConfigString(CS_LOCATIONS + ci->location);
-		if (!p || !*p) {
-			p = "unknown";
+		if (!p || !*p)
+		{
+			p = "okänt";
 		}
-    CG_Text_Paint(rect->x, rect->y + rect->h, scale, color, p, 0, 0, textStyle);
-  }
+		CG_JbConvertMultiByteToAnsi(lAnsiText, p);
+		CG_Text_Paint(rect->x, rect->y + rect->h, scale, color, lAnsiText, 0, 0, textStyle);
+	}
 }
 
 static void CG_DrawPlayerLocation( rectDef_t *rect, float scale, vec4_t color, int textStyle  ) {
 	clientInfo_t *ci = &cgs.clientinfo[cg.snap->ps.clientNum];
-  if (ci) {
+	if (ci)
+	{
+		// Jonte: converting shitty GtkRadiant's multi byte texts.
+		char lAnsiText[100];
 		const char *p = CG_ConfigString(CS_LOCATIONS + ci->location);
-		if (!p || !*p) {
-			p = "unknown";
+		if (!p || !*p)
+		{
+			p = "okänt";
 		}
-    CG_Text_Paint(rect->x, rect->y + rect->h, scale, color, p, 0, 0, textStyle);
-  }
+		CG_JbConvertMultiByteToAnsi(lAnsiText, p);
+		CG_Text_Paint(rect->x, rect->y + rect->h, scale, color, lAnsiText, 0, 0, textStyle);
+	}
 }
 
 
@@ -1134,7 +1165,7 @@ static void CG_DrawAreaChat(rectDef_t *rect, float scale, vec4_t color, qhandle_
 const char *CG_GetKillerText() {
 	const char *s = "";
 	if ( cg.killerName[0] ) {
-		s = va("Fragged by %s", cg.killerName );
+		s = va("Pangad av %s", cg.killerName );
 	}
 	return s;
 }
@@ -1177,9 +1208,9 @@ const char *CG_GetGameStatusText() {
 		if ( cg.teamScores[0] == cg.teamScores[1] ) {
 			s = va("Teams are tied at %i", cg.teamScores[0] );
 		} else if ( cg.teamScores[0] >= cg.teamScores[1] ) {
-			s = va("Red leads Blue, %i to %i", cg.teamScores[0], cg.teamScores[1] );
+			s = va("Röda leder över Blå, %i mot %i", cg.teamScores[0], cg.teamScores[1] );
 		} else {
-			s = va("Blue leads Red, %i to %i", cg.teamScores[1], cg.teamScores[0] );
+			s = va("Blå leder över Röda, %i mot %i", cg.teamScores[1], cg.teamScores[0] );
 		}
 	}
 	return s;
@@ -1233,7 +1264,7 @@ static void CG_Text_Paint_Limit(float *maxX, float x, float y, float scale, vec4
 		}
 		count = 0;
 		while (s && *s && count < len) {
-			glyph = &font->glyphs[(int)*s]; // TTimo: FIXME: getting nasty warnings without the cast, hopefully this doesn't break the VM build
+			glyph = &font->glyphs[(unsigned char)*s]; // TTimo: FIXME: getting nasty warnings without the cast, hopefully this doesn't break the VM build
 			if ( Q_IsColorString( s ) ) {
 				memcpy( newColor, g_color_table[ColorIndex(*(s+1))], sizeof( newColor ) );
 				newColor[3] = color[3];
@@ -1372,7 +1403,7 @@ void CG_DrawNewTeamInfo(rectDef_t *rect, float text_x, float text_y, float scale
 
 			p = CG_ConfigString(CS_LOCATIONS + ci->location);
 			if (!p || !*p) {
-				p = "unknown";
+				p = "okänt";
 			}
 
 			xx += leftOver / 3 + 2;

@@ -526,7 +526,7 @@ typedef enum {
 	SF_MD3,
 	SF_MD4,
 	SF_FLARE,
-	SF_ENTITY,				// beams, rails, lightning, etc that can be determined by entity
+	SF_ENTITY,				// beams, sniper trails, lightning, etc that can be determined by entity
 	SF_DISPLAY_LIST,
 
 	SF_NUM_SURFACE_TYPES,
@@ -971,9 +971,9 @@ extern glstate_t	glState;		// outside of TR since it shouldn't be cleared during
 extern cvar_t	*r_flareSize;
 extern cvar_t	*r_flareFade;
 
-extern cvar_t	*r_railWidth;
-extern cvar_t	*r_railCoreWidth;
-extern cvar_t	*r_railSegmentLength;
+extern cvar_t	*r_sniperWidth;
+extern cvar_t	*r_sniperCoreWidth;
+extern cvar_t	*r_sniperSegmentLength;
 
 extern cvar_t	*r_ignore;				// used for debugging anything
 extern cvar_t	*r_verbose;				// used for verbose debug spew
@@ -1097,7 +1097,7 @@ void R_RenderView( viewParms_t *parms );
 void R_AddMD3Surfaces( trRefEntity_t *e );
 void R_AddNullModelSurfaces( trRefEntity_t *e );
 void R_AddBeamSurfaces( trRefEntity_t *e );
-void R_AddRailSurfaces( trRefEntity_t *e, qboolean isUnderwater );
+void R_AddSniperSurfaces( trRefEntity_t *e, qboolean isUnderwater );
 void R_AddLightningBoltSurfaces( trRefEntity_t *e );
 
 void R_AddPolygonSurfaces( void );

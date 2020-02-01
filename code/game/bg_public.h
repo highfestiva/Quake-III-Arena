@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // because games can change separately from the main system version, we need a
 // second version that must match between game and cgame
 
-#define	GAME_VERSION		"baseq3-1"
+#define	GAME_VERSION		"joopdata-1"
 
 #define	DEFAULT_GRAVITY		800
 #define	GIB_HEALTH			-40
@@ -229,7 +229,7 @@ typedef enum {
 	PERS_ATTACKEE_ARMOR,			// health/armor of last person we attacked
 	PERS_KILLED,					// count of the number of times you died
 	// player awards tracking
-	PERS_IMPRESSIVE_COUNT,			// two railgun hits in a row
+	PERS_IMPRESSIVE_COUNT,			// two sniper rifle hits in a row
 	PERS_EXCELLENT_COUNT,			// two successive kills in a short amount of time
 	PERS_DEFEND_COUNT,				// defend awards
 	PERS_ASSIST_COUNT,				// assist awards
@@ -308,16 +308,18 @@ typedef enum {
 	WP_MACHINEGUN,
 	WP_SHOTGUN,
 	WP_GRENADE_LAUNCHER,
+	WP_SNIPERRIFLE,
+#ifdef MISSIONPACK
+	WP_CHAINGUN,
+#endif
 	WP_ROCKET_LAUNCHER,
 	WP_LIGHTNING,
-	WP_RAILGUN,
 	WP_PLASMAGUN,
 	WP_BFG,
 	WP_GRAPPLING_HOOK,
 #ifdef MISSIONPACK
 	WP_NAILGUN,
 	WP_PROX_LAUNCHER,
-	WP_CHAINGUN,
 #endif
 
 	WP_NUM_WEAPONS
@@ -411,7 +413,7 @@ typedef enum {
 	EV_MISSILE_HIT,
 	EV_MISSILE_MISS,
 	EV_MISSILE_MISS_METAL,
-	EV_RAILTRAIL,
+	EV_SNIPERTRAIL,
 	EV_SHOTGUN,
 	EV_BULLET,				// otherEntity is the shooter
 
@@ -580,7 +582,7 @@ typedef enum {
 	MOD_ROCKET_SPLASH,
 	MOD_PLASMA,
 	MOD_PLASMA_SPLASH,
-	MOD_RAILGUN,
+	MOD_SNIPER,
 	MOD_LIGHTNING,
 	MOD_BFG,
 	MOD_BFG_SPLASH,

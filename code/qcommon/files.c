@@ -46,7 +46,7 @@ a terminating zero. "..", "\\", and ":" are explicitly illegal in qpaths to prev
 references outside the quake directory system.
 
 The "base path" is the path to the directory holding all the game directories and usually
-the executable.  It defaults to ".", but can be overridden with a "+set fs_basepath c:\quake3"
+the executable.  It defaults to ".", but can be overridden with a "+set fs_basepath c:\Jooperative"
 command line to allow code debugging in a different directory.  Basepath cannot
 be modified at all after startup.  Any files that are created (demos, screenshots,
 etc) will be created reletive to the base path, so base path should usually be writable.
@@ -55,7 +55,7 @@ The "cd path" is the path to an alternate hierarchy that will be searched if a f
 is not located in the base path.  A user can do a partial install that copies some
 data to a base path created on their hard drive and leave the rest on the cd.  Files
 are never writen to the cd path.  It defaults to a value set by the installer, like
-"e:\quake3", but it can be overridden with "+set ds_cdpath g:\quake3".
+"e:\Jooperative", but it can be overridden with "+set ds_cdpath g:\Jooperative".
 
 If a user runs the game directly from a CD, the base path would be on the CD.  This
 should still function correctly, but all file writes will fail (harmlessly).
@@ -69,7 +69,7 @@ along with "home path" and "cd path" for game content.
 
 
 The "base game" is the directory under the paths where data comes from by default, and
-can be either "baseq3" or "demoq3".
+can be either "joopdata" or "joopdemodata".
 
 The "current game" may be the same as the base game, or it may be the name of another
 directory under the paths that should be searched for files before looking in the base game.
@@ -95,8 +95,8 @@ automatically restricts where game media can come from to prevent add-ons from w
 
 After the paths are initialized, quake will look for the product.txt file.  If not
 found and verified, the game will run in restricted mode.  In restricted mode, only 
-files contained in demoq3/pak0.pk3 will be available for loading, and only if the zip header is
-verified to not have been modified.  A single exception is made for q3config.cfg.  Files
+files contained in joopdemodata/pak0.pk3 will be available for loading, and only if the zip header is
+verified to not have been modified.  A single exception is made for jooperative.cfg.  Files
 can still be written out in restricted mode, so screenshots and demos are allowed.
 Restricted mode can be tested by setting "+set fs_restrict 1" on the command line, even
 if there is a valid product.txt under the basepath or cdpath.
@@ -115,8 +115,8 @@ calls to FS_AddGameDirectory
 Additionaly, we search in several subdirectories:
 current game is the current mode
 base game is a variable to allow mods based on other mods
-(such as baseq3 + missionpack content combination in a mod for instance)
-BASEGAME is the hardcoded base game ("baseq3")
+(such as joopdata + missionpack content combination in a mod for instance)
+BASEGAME is the hardcoded base game ("joopdata")
 
 e.g. the qpath "sound/newstuff/test.wav" would be searched for in the following places:
 
@@ -184,7 +184,7 @@ Read / write config to floppy option.
 
 Different version coexistance?
 
-When building a pak file, make sure a q3config.cfg isn't present in it,
+When building a pak file, make sure a jooperative.cfg isn't present in it,
 or configs will never get loaded from disk!
 
   todo:
@@ -221,9 +221,9 @@ typedef struct fileInPack_s {
 } fileInPack_t;
 
 typedef struct {
-	char			pakFilename[MAX_OSPATH];	// c:\quake3\baseq3\pak0.pk3
+	char			pakFilename[MAX_OSPATH];	// c:\Jooperative\joopdata\pak0.pk3
 	char			pakBasename[MAX_OSPATH];	// pak0
-	char			pakGamename[MAX_OSPATH];	// baseq3
+	char			pakGamename[MAX_OSPATH];	// joopdata
 	unzFile			handle;						// handle to zip file
 	int				checksum;					// regular checksum
 	int				pure_checksum;				// checksum for pure
@@ -235,8 +235,8 @@ typedef struct {
 } pack_t;
 
 typedef struct {
-	char		path[MAX_OSPATH];		// c:\quake3
-	char		gamedir[MAX_OSPATH];	// baseq3
+	char		path[MAX_OSPATH];		// c:\Jooperative
+	char		gamedir[MAX_OSPATH];	// joopdata
 } directory_t;
 
 typedef struct searchpath_s {
@@ -541,7 +541,7 @@ static void FS_CopyFile( char *fromOSPath, char *toOSPath ) {
 	// we are using direct malloc instead of Z_Malloc here, so it
 	// probably won't work on a mac... Its only for developers anyway...
 	buf = malloc( len );
-	if (fread( buf, 1, len, f ) != len)
+	if ((int)fread( buf, 1, len, f ) != len)
 		Com_Error( ERR_FATAL, "Short read in FS_Copyfiles()\n" );
 	fclose( f );
 
@@ -553,7 +553,7 @@ static void FS_CopyFile( char *fromOSPath, char *toOSPath ) {
 	if ( !f ) {
 		return;
 	}
-	if (fwrite( buf, 1, len, f ) != len)
+	if ((int)fwrite( buf, 1, len, f ) != len)
 		Com_Error( ERR_FATAL, "Short write in FS_Copyfiles()\n" );
 	fclose( f );
 	free( buf );
@@ -1056,7 +1056,7 @@ int FS_FOpenFileRead( const char *filename, fileHandle_t *file, qboolean uniqueF
 		return -1;
 	}
 
-	// make sure the q3key file is only readable by the quake3.exe at initialization
+	// make sure the q3key file is only readable by the Jooperative.exe at initialization
 	// any other time the key should only be accessed in memory using the provided functions
 	if( com_fullyInitialized && strstr( filename, "q3key" ) ) {
 		*file = 0;
@@ -1167,6 +1167,7 @@ int FS_FOpenFileRead( const char *filename, fileHandle_t *file, qboolean uniqueF
       //   this test can make the search fail although the file is in the directory
       // I had the problem on https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=8
       // turned out I used FS_FileExists instead
+			//* Jonte
 			if ( fs_restrict->integer || fs_numServerPaks ) {
 
 				if ( Q_stricmp( filename + l - 4, ".cfg" )		// for config files
@@ -1176,7 +1177,7 @@ int FS_FOpenFileRead( const char *filename, fileHandle_t *file, qboolean uniqueF
 					&& Q_stricmp( filename + l - 4, ".dat" ) ) {	// for journal files
 					continue;
 				}
-			}
+			}//*/
 
 			dir = search->dir;
 			
@@ -1492,7 +1493,7 @@ int	FS_FileIsInPAK(const char *filename, int *pChecksum ) {
 ============
 FS_ReadFile
 
-Filename are relative to the quake search path
+Filename are relative to the Jooperative search path
 a null buffer will just return the file length without loading
 ============
 */
@@ -1631,7 +1632,7 @@ void FS_FreeFile( void *buffer ) {
 ============
 FS_WriteFile
 
-Filename are reletive to the quake search path
+Filename are reletive to the Jooperative search path
 ============
 */
 void FS_WriteFile( const char *qpath, const void *buffer, int size ) {
@@ -2107,7 +2108,7 @@ static char** Sys_ConcatenateFileLists( char **list0, char **list1, char **list2
 FS_GetModList
 
 Returns a list of mod directory names
-A mod directory is a peer to baseq3 with a pk3 in it
+A mod directory is a peer to joopdata with a pk3 in it
 The directories are searched in base path, cd path and home path
 ================
 */
@@ -2154,8 +2155,8 @@ int	FS_GetModList( char *listbuf, int bufsize ) {
     if (bDrop) {
       continue;
     }
-    // we drop "baseq3" "." and ".."
-    if (Q_stricmp(name, "baseq3") && Q_stricmpn(name, ".", 1)) {
+    // we drop "joopdata" "." and ".."
+    if (Q_stricmp(name, "joopdata") && Q_stricmpn(name, ".", 1)) {
       // now we need to find some .pk3 files to validate the mod
       // NOTE TTimo: (actually I'm not sure why .. what if it's a mod under developement with no .pk3?)
       // we didn't keep the information when we merged the directory names, as to what OS Path it was found under
@@ -2584,7 +2585,7 @@ qboolean FS_ComparePaks( char *neededpaks, int len, qboolean dlstring ) {
 		havepak = qfalse;
 
 		// never autodownload any of the id paks
-		if ( FS_idPak(fs_serverReferencedPakNames[i], "baseq3") || FS_idPak(fs_serverReferencedPakNames[i], "missionpack") ) {
+		if ( FS_idPak(fs_serverReferencedPakNames[i], "joopdata") || FS_idPak(fs_serverReferencedPakNames[i], "missionpack") ) {
 			continue;
 		}
 
@@ -2795,7 +2796,7 @@ static void FS_Startup( const char *gameName ) {
 		}
 	}
 
-	Com_ReadCDKey( "baseq3" );
+	Com_ReadCDKey( "joopdata" );
 	fs = Cvar_Get ("fs_game", "", CVAR_INIT|CVAR_SYSTEMINFO );
 	if (fs && fs->string[0] != 0) {
 		Com_AppendCDKey( fs->string );
@@ -2836,6 +2837,7 @@ if the full version is not found
 ===================
 */
 static void FS_SetRestrictions( void ) {
+	/* Jonte
 	searchpath_t	*path;
 
 #ifndef PRE_RELEASE_DEMO
@@ -2884,7 +2886,7 @@ static void FS_SetRestrictions( void ) {
 				Com_Error( ERR_FATAL, "Corrupted pak0.pk3: %u", path->pack->checksum );
 			}
 		}
-	}
+	}*/
 }
 
 /*
@@ -3087,7 +3089,7 @@ const char *FS_ReferencedPakNames( void ) {
 	info[0] = 0;
 
 	// we want to return ALL pk3's from the fs_game path
-	// and referenced one's from baseq3
+	// and referenced one's from joopdata
 	for ( search = fs_searchpaths ; search ; search = search->next ) {
 		// is the element a pak file?
 		if ( search->pack ) {
@@ -3316,9 +3318,9 @@ void FS_Restart( int checksumFeed ) {
 
 	// bk010116 - new check before safeMode
 	if ( Q_stricmp(fs_gamedirvar->string, lastValidGame) ) {
-		// skip the q3config.cfg if "safe" is on the command line
+		// skip the jooperative.cfg if "safe" is on the command line
 		if ( !Com_SafeMode() ) {
-			Cbuf_AddText ("exec q3config.cfg\n");
+			Cbuf_AddText ("exec jooperative.cfg\n");
 		}
 	}
 

@@ -273,11 +273,11 @@ qboolean Sys_GetPacket( netadr_t *net_from, msg_t *net_message ) {
 			continue;
 		}
 
-		if ( net_socket == ip_socket ) {
+		if ( net_socket == (int)ip_socket ) {
 			memset( ((struct sockaddr_in *)&from)->sin_zero, 0, 8 );
 		}
 
-		if ( usingSocks && net_socket == ip_socket && memcmp( &from, &socksRelayAddr, fromlen ) == 0 ) {
+		if ( usingSocks && net_socket == (int)ip_socket && memcmp( &from, &socksRelayAddr, fromlen ) == 0 ) {
 			if ( ret < 10 || net_message->data[0] != 0 || net_message->data[1] != 0 || net_message->data[2] != 0 || net_message->data[3] != 1 ) {
 				continue;
 			}

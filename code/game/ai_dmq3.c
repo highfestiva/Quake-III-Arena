@@ -1728,7 +1728,7 @@ void BotUpdateInventory(bot_state_t *bs) {
 	bs->inventory[INVENTORY_GRENADELAUNCHER] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_GRENADE_LAUNCHER)) != 0;
 	bs->inventory[INVENTORY_ROCKETLAUNCHER] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_ROCKET_LAUNCHER)) != 0;
 	bs->inventory[INVENTORY_LIGHTNING] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_LIGHTNING)) != 0;
-	bs->inventory[INVENTORY_RAILGUN] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_RAILGUN)) != 0;
+	bs->inventory[INVENTORY_SNIPERRIFLE] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_SNIPERRIFLE)) != 0;
 	bs->inventory[INVENTORY_PLASMAGUN] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_PLASMAGUN)) != 0;
 	bs->inventory[INVENTORY_BFG10K] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_BFG)) != 0;
 	bs->inventory[INVENTORY_GRAPPLINGHOOK] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_GRAPPLING_HOOK)) != 0;
@@ -1744,7 +1744,7 @@ void BotUpdateInventory(bot_state_t *bs) {
 	bs->inventory[INVENTORY_CELLS] = bs->cur_ps.ammo[WP_PLASMAGUN];
 	bs->inventory[INVENTORY_LIGHTNINGAMMO] = bs->cur_ps.ammo[WP_LIGHTNING];
 	bs->inventory[INVENTORY_ROCKETS] = bs->cur_ps.ammo[WP_ROCKET_LAUNCHER];
-	bs->inventory[INVENTORY_SLUGS] = bs->cur_ps.ammo[WP_RAILGUN];
+	bs->inventory[INVENTORY_SLUGS] = bs->cur_ps.ammo[WP_SNIPERRIFLE];
 	bs->inventory[INVENTORY_BFGAMMO] = bs->cur_ps.ammo[WP_BFG];
 #ifdef MISSIONPACK
 	bs->inventory[INVENTORY_NAILS] = bs->cur_ps.ammo[WP_NAILGUN];
@@ -2217,8 +2217,8 @@ float BotAggression(bot_state_t *bs) {
 	//if the bot can use the bfg
 	if (bs->inventory[INVENTORY_BFG10K] > 0 &&
 			bs->inventory[INVENTORY_BFGAMMO] > 7) return 100;
-	//if the bot can use the railgun
-	if (bs->inventory[INVENTORY_RAILGUN] > 0 &&
+	//if the bot can use the sniper rifle
+	if (bs->inventory[INVENTORY_SNIPERRIFLE] > 0 &&
 			bs->inventory[INVENTORY_SLUGS] > 5) return 95;
 	//if the bot can use the lightning gun
 	if (bs->inventory[INVENTORY_LIGHTNING] > 0 &&
@@ -2426,8 +2426,8 @@ int BotHasPersistantPowerupAndWeapon(bot_state_t *bs) {
 	//if the bot can use the bfg
 	if (bs->inventory[INVENTORY_BFG10K] > 0 &&
 			bs->inventory[INVENTORY_BFGAMMO] > 7) return qtrue;
-	//if the bot can use the railgun
-	if (bs->inventory[INVENTORY_RAILGUN] > 0 &&
+	//if the bot can use the sniper rifle
+	if (bs->inventory[INVENTORY_SNIPERRIFLE] > 0 &&
 			bs->inventory[INVENTORY_SLUGS] > 5) return qtrue;
 	//if the bot can use the lightning gun
 	if (bs->inventory[INVENTORY_LIGHTNING] > 0 &&
@@ -2509,9 +2509,9 @@ int BotWantsToCamp(bot_state_t *bs) {
 	}
 	//if the bot isn't healthy anough
 	if (BotAggression(bs) < 50) return qfalse;
-	//the bot should have at least have the rocket launcher, the railgun or the bfg10k with some ammo
+	//the bot should have at least have the rocket launcher, the sniper rifle or the bfg10k with some ammo
 	if ((bs->inventory[INVENTORY_ROCKETLAUNCHER] <= 0 || bs->inventory[INVENTORY_ROCKETS < 10]) &&
-		(bs->inventory[INVENTORY_RAILGUN] <= 0 || bs->inventory[INVENTORY_SLUGS] < 10) &&
+		(bs->inventory[INVENTORY_SNIPERRIFLE] <= 0 || bs->inventory[INVENTORY_SLUGS] < 10) &&
 		(bs->inventory[INVENTORY_BFG10K] <= 0 || bs->inventory[INVENTORY_BFGAMMO] < 10)) {
 		return qfalse;
 	}
@@ -3326,8 +3326,8 @@ void BotAimAtEnemy(bot_state_t *bs) {
 	else if (wi.number == WP_LIGHTNING) {
 		aim_accuracy = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_LIGHTNING, 0, 1);
 	}
-	else if (wi.number == WP_RAILGUN) {
-		aim_accuracy = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_RAILGUN, 0, 1);
+	else if (wi.number == WP_SNIPERRIFLE) {
+		aim_accuracy = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_SNIPERRIFLE, 0, 1);
 	}
 	else if (wi.number == WP_PLASMAGUN) {
 		aim_accuracy = trap_Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_PLASMAGUN, 0, 1);
@@ -3516,7 +3516,7 @@ void BotAimAtEnemy(bot_state_t *bs) {
 	if (wi.number == WP_MACHINEGUN ||
 		wi.number == WP_SHOTGUN ||
 		wi.number == WP_LIGHTNING ||
-		wi.number == WP_RAILGUN) {
+		wi.number == WP_SNIPERRIFLE) {
 		//distance towards the enemy
 		dist = VectorLength(dir);
 		if (dist > 150) dist = 150;
@@ -5400,7 +5400,7 @@ void BotSetupDeathmatchAI(void) {
 	trap_Cvar_Register(&bot_testrchat, "bot_testrchat", "0", 0);
 	trap_Cvar_Register(&bot_challenge, "bot_challenge", "0", 0);
 	trap_Cvar_Register(&bot_predictobstacles, "bot_predictobstacles", "1", 0);
-	trap_Cvar_Register(&g_spSkill, "g_spSkill", "2", 0);
+	trap_Cvar_Register(&g_spSkill, "g_spSkill", "5", 0);
 	//
 	if (gametype == GT_CTF) {
 		if (trap_BotGetLevelItemGoal(-1, "Red Flag", &ctf_redflag) < 0)

@@ -156,7 +156,7 @@ static void SV_Map_f( void ) {
 	}
 
 	// force latched values to get set
-	Cvar_Get ("g_gametype", "0", CVAR_SERVERINFO | CVAR_USERINFO | CVAR_LATCH );
+	Cvar_Get ("g_gametype", "3", CVAR_SERVERINFO | CVAR_USERINFO | CVAR_LATCH );
 
 	cmd = Cmd_Argv(0);
 	if( Q_stricmpn( cmd, "sp", 2 ) == 0 ) {
@@ -187,6 +187,9 @@ static void SV_Map_f( void ) {
 
 	// start up the map
 	SV_SpawnServer( mapname, killBots );
+
+	// Jonte:
+	cheat = qtrue;
 
 	// set the cheat value
 	// if the level was started with "map <levelname>", then

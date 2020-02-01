@@ -107,26 +107,26 @@ static cvarTable_t		gameCvarTable[] = {
 	{ NULL, "sv_mapname", "", CVAR_SERVERINFO | CVAR_ROM, 0, qfalse  },
 
 	// latched vars
-	{ &g_gametype, "g_gametype", "0", CVAR_SERVERINFO | CVAR_USERINFO | CVAR_LATCH, 0, qfalse  },
+	{ &g_gametype, "g_gametype", "3", CVAR_SERVERINFO | CVAR_USERINFO | CVAR_LATCH | CVAR_ROM, 0, qfalse  },
 
 	{ &g_maxclients, "sv_maxclients", "8", CVAR_SERVERINFO | CVAR_LATCH | CVAR_ARCHIVE, 0, qfalse  },
 	{ &g_maxGameClients, "g_maxGameClients", "0", CVAR_SERVERINFO | CVAR_LATCH | CVAR_ARCHIVE, 0, qfalse  },
 
 	// change anytime vars
 	{ &g_dmflags, "dmflags", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue  },
-	{ &g_fraglimit, "fraglimit", "20", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
+	{ &g_fraglimit, "fraglimit", "0", CVAR_SERVERINFO | CVAR_NORESTART, 0, qtrue },
 	{ &g_timelimit, "timelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
 	{ &g_capturelimit, "capturelimit", "8", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
 
 	{ &g_synchronousClients, "g_synchronousClients", "0", CVAR_SYSTEMINFO, 0, qfalse  },
 
-	{ &g_friendlyFire, "g_friendlyFire", "0", CVAR_ARCHIVE, 0, qtrue  },
+	{ &g_friendlyFire, "g_friendlyFire", "1", CVAR_ARCHIVE, 0, qtrue  },
 
-	{ &g_teamAutoJoin, "g_teamAutoJoin", "0", CVAR_ARCHIVE  },
-	{ &g_teamForceBalance, "g_teamForceBalance", "0", CVAR_ARCHIVE  },
+	{ &g_teamAutoJoin, "g_teamAutoJoin", "1", CVAR_ROM },
+	{ &g_teamForceBalance, "g_teamForceBalance", "0", CVAR_ROM },
 
-	{ &g_warmup, "g_warmup", "20", CVAR_ARCHIVE, 0, qtrue  },
-	{ &g_doWarmup, "g_doWarmup", "0", 0, 0, qtrue  },
+	{ &g_warmup, "g_warmup", "0", CVAR_ROM, 0, qtrue  },
+	{ &g_doWarmup, "g_doWarmup", "0", CVAR_ROM, 0, qtrue  },
 	{ &g_log, "g_log", "games.log", CVAR_ARCHIVE, 0, qfalse  },
 	{ &g_logSync, "g_logSync", "0", CVAR_ARCHIVE, 0, qfalse  },
 
@@ -139,13 +139,13 @@ static cvarTable_t		gameCvarTable[] = {
 
 	{ &g_dedicated, "dedicated", "0", 0, 0, qfalse  },
 
-	{ &g_speed, "g_speed", "320", 0, 0, qtrue  },
+	{ &g_speed, "g_speed", "160", 0, 0, qtrue  },
 	{ &g_gravity, "g_gravity", "800", 0, 0, qtrue  },
 	{ &g_knockback, "g_knockback", "1000", 0, 0, qtrue  },
 	{ &g_quadfactor, "g_quadfactor", "3", 0, 0, qtrue  },
 	{ &g_weaponRespawn, "g_weaponrespawn", "5", 0, 0, qtrue  },
 	{ &g_weaponTeamRespawn, "g_weaponTeamRespawn", "30", 0, 0, qtrue },
-	{ &g_forcerespawn, "g_forcerespawn", "20", 0, 0, qtrue },
+	{ &g_forcerespawn, "g_forcerespawn", "0", 0, 0, qtrue },
 	{ &g_inactivity, "g_inactivity", "0", 0, 0, qtrue },
 	{ &g_debugMove, "g_debugMove", "0", 0, 0, qfalse },
 	{ &g_debugDamage, "g_debugDamage", "0", 0, 0, qfalse },
@@ -170,15 +170,15 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_blueteam, "g_blueteam", "Pagans", CVAR_ARCHIVE | CVAR_SERVERINFO | CVAR_USERINFO , 0, qtrue, qtrue  },
 	{ &g_singlePlayer, "ui_singlePlayerActive", "", 0, 0, qfalse, qfalse  },
 
-	{ &g_enableDust, "g_enableDust", "0", CVAR_SERVERINFO, 0, qtrue, qfalse },
-	{ &g_enableBreath, "g_enableBreath", "0", CVAR_SERVERINFO, 0, qtrue, qfalse },
+	{ &g_enableDust, "g_enableDust", "1", CVAR_SERVERINFO, 0, qtrue, qfalse },
+	{ &g_enableBreath, "g_enableBreath", "1", CVAR_SERVERINFO, 0, qtrue, qfalse },
 	{ &g_proxMineTimeout, "g_proxMineTimeout", "20000", 0, 0, qfalse },
 #endif
 	{ &g_smoothClients, "g_smoothClients", "1", 0, 0, qfalse},
 	{ &pmove_fixed, "pmove_fixed", "0", CVAR_SYSTEMINFO, 0, qfalse},
 	{ &pmove_msec, "pmove_msec", "8", CVAR_SYSTEMINFO, 0, qfalse},
 
-	{ &g_rankings, "g_rankings", "0", 0, 0, qfalse}
+	{ &g_rankings, "g_rankings", "1", 0, 0, qfalse}
 
 };
 
@@ -356,10 +356,13 @@ void G_RegisterCvars( void ) {
 		G_RemapTeamShaders();
 	}
 
+	// Jonte: Team Deathmatch only.
+	g_gametype.integer = GT_TEAM;
+
 	// check some things
 	if ( g_gametype.integer < 0 || g_gametype.integer >= GT_MAX_GAME_TYPE ) {
 		G_Printf( "g_gametype %i is out of range, defaulting to 0\n", g_gametype.integer );
-		trap_Cvar_Set( "g_gametype", "0" );
+		trap_Cvar_Set( "g_gametype", "3" );
 	}
 
 	level.warmupModificationCount = g_warmup.modificationCount;
@@ -383,7 +386,7 @@ void G_UpdateCvars( void ) {
 				cv->modificationCount = cv->vmCvar->modificationCount;
 
 				if ( cv->trackChange ) {
-					trap_SendServerCommand( -1, va("print \"Server: %s changed to %s\n\"", 
+					trap_SendServerCommand( -1, va("print \"Server: %s ändrad till %s\n\"", 
 						cv->cvarName, cv->vmCvar->string ) );
 				}
 
@@ -1323,7 +1326,7 @@ void CheckExitRules( void ) {
 
 	if ( g_timelimit.integer && !level.warmupTime ) {
 		if ( level.time - level.startTime >= g_timelimit.integer*60000 ) {
-			trap_SendServerCommand( -1, "print \"Timelimit hit.\n\"");
+			trap_SendServerCommand( -1, "print \"Tidsgränsen är nådd.\n\"");
 			LogExit( "Timelimit hit." );
 			return;
 		}
@@ -1335,13 +1338,13 @@ void CheckExitRules( void ) {
 
 	if ( g_gametype.integer < GT_CTF && g_fraglimit.integer ) {
 		if ( level.teamScores[TEAM_RED] >= g_fraglimit.integer ) {
-			trap_SendServerCommand( -1, "print \"Red hit the fraglimit.\n\"" );
+			trap_SendServerCommand( -1, "print \"Röd vann på frags.\n\"" );
 			LogExit( "Fraglimit hit." );
 			return;
 		}
 
 		if ( level.teamScores[TEAM_BLUE] >= g_fraglimit.integer ) {
-			trap_SendServerCommand( -1, "print \"Blue hit the fraglimit.\n\"" );
+			trap_SendServerCommand( -1, "print \"Blå vann på frags.\n\"" );
 			LogExit( "Fraglimit hit." );
 			return;
 		}
@@ -1357,7 +1360,7 @@ void CheckExitRules( void ) {
 
 			if ( cl->ps.persistant[PERS_SCORE] >= g_fraglimit.integer ) {
 				LogExit( "Fraglimit hit." );
-				trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " hit the fraglimit.\n\"",
+				trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " vann på frags.\n\"",
 					cl->pers.netname ) );
 				return;
 			}
@@ -1367,13 +1370,13 @@ void CheckExitRules( void ) {
 	if ( g_gametype.integer >= GT_CTF && g_capturelimit.integer ) {
 
 		if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
-			trap_SendServerCommand( -1, "print \"Red hit the capturelimit.\n\"" );
+			trap_SendServerCommand( -1, "print \"Röd fick den sista flaggan.\n\"" );
 			LogExit( "Capturelimit hit." );
 			return;
 		}
 
 		if ( level.teamScores[TEAM_BLUE] >= g_capturelimit.integer ) {
-			trap_SendServerCommand( -1, "print \"Blue hit the capturelimit.\n\"" );
+			trap_SendServerCommand( -1, "print \"Blå fick den sista flaggan.\n\"" );
 			LogExit( "Capturelimit hit." );
 			return;
 		}
@@ -1518,16 +1521,16 @@ void CheckVote( void ) {
 		return;
 	}
 	if ( level.time - level.voteTime >= VOTE_TIME ) {
-		trap_SendServerCommand( -1, "print \"Vote failed.\n\"" );
+		trap_SendServerCommand( -1, "print \"Omröstningen gick inte igenom.\n\"" );
 	} else {
 		// ATVI Q3 1.32 Patch #9, WNF
 		if ( level.voteYes > level.numVotingClients/2 ) {
 			// execute the command, then remove the vote
-			trap_SendServerCommand( -1, "print \"Vote passed.\n\"" );
+			trap_SendServerCommand( -1, "print \"Omöstningen gick igenom.\n\"" );
 			level.voteExecuteTime = level.time + 3000;
 		} else if ( level.voteNo >= level.numVotingClients/2 ) {
 			// same behavior as a timeout
-			trap_SendServerCommand( -1, "print \"Vote failed.\n\"" );
+			trap_SendServerCommand( -1, "print \"Omröstningen gick inte igenom.\n\"" );
 		} else {
 			// still waiting for a majority
 			return;
@@ -1562,11 +1565,11 @@ void SetLeader(int team, int client) {
 	int i;
 
 	if ( level.clients[client].pers.connected == CON_DISCONNECTED ) {
-		PrintTeam(team, va("print \"%s is not connected\n\"", level.clients[client].pers.netname) );
+		PrintTeam(team, va("print \"%s är inte ansluten\n\"", level.clients[client].pers.netname) );
 		return;
 	}
 	if (level.clients[client].sess.sessionTeam != team) {
-		PrintTeam(team, va("print \"%s is not on the team anymore\n\"", level.clients[client].pers.netname) );
+		PrintTeam(team, va("print \"%s är inte med i laget längre\n\"", level.clients[client].pers.netname) );
 		return;
 	}
 	for ( i = 0 ; i < level.maxclients ; i++ ) {
@@ -1579,7 +1582,7 @@ void SetLeader(int team, int client) {
 	}
 	level.clients[client].sess.teamLeader = qtrue;
 	ClientUserinfoChanged( client );
-	PrintTeam(team, va("print \"%s is the new team leader\n\"", level.clients[client].pers.netname) );
+	PrintTeam(team, va("print \"%s är den nya lagledaren\n\"", level.clients[client].pers.netname) );
 }
 
 /*
@@ -1633,11 +1636,11 @@ void CheckTeamVote( int team ) {
 		return;
 	}
 	if ( level.time - level.teamVoteTime[cs_offset] >= VOTE_TIME ) {
-		trap_SendServerCommand( -1, "print \"Team vote failed.\n\"" );
+		trap_SendServerCommand( -1, "print \"Lagomröstningen gick inte igenom.\n\"" );
 	} else {
 		if ( level.teamVoteYes[cs_offset] > level.numteamVotingClients[cs_offset]/2 ) {
 			// execute the command, then remove the vote
-			trap_SendServerCommand( -1, "print \"Team vote passed.\n\"" );
+			trap_SendServerCommand( -1, "print \"Lagomröstningen gick igenom.\n\"" );
 			//
 			if ( !Q_strncmp( "leader", level.teamVoteString[cs_offset], 6) ) {
 				//set the team leader
@@ -1648,7 +1651,7 @@ void CheckTeamVote( int team ) {
 			}
 		} else if ( level.teamVoteNo[cs_offset] >= level.numteamVotingClients[cs_offset]/2 ) {
 			// same behavior as a timeout
-			trap_SendServerCommand( -1, "print \"Team vote failed.\n\"" );
+			trap_SendServerCommand( -1, "print \"Lagomröstningen gick inte igenom.\n\"" );
 		} else {
 			// still waiting for a majority
 			return;

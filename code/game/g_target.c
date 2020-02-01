@@ -432,7 +432,7 @@ static void target_location_linkup(gentity_t *ent)
 
 	level.locationHead = NULL;
 
-	trap_SetConfigstring( CS_LOCATIONS, "unknown" );
+	trap_SetConfigstring( CS_LOCATIONS, "okänt" );
 
 	for (i = 0, ent = g_entities, n = 1;
 			i < level.num_entities;

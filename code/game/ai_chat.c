@@ -280,28 +280,28 @@ BotWeaponNameForMeansOfDeath
 
 char *BotWeaponNameForMeansOfDeath(int mod) {
 	switch(mod) {
-		case MOD_SHOTGUN: return "Shotgun";
-		case MOD_GAUNTLET: return "Gauntlet";
-		case MOD_MACHINEGUN: return "Machinegun";
+		case MOD_SHOTGUN: return "Hagelbössa";
+		case MOD_GAUNTLET: return "Elvisp";
+		case MOD_MACHINEGUN: return "Uzi";
 		case MOD_GRENADE:
-		case MOD_GRENADE_SPLASH: return "Grenade Launcher";
+		case MOD_GRENADE_SPLASH: return "Granatkastare";
 		case MOD_ROCKET:
-		case MOD_ROCKET_SPLASH: return "Rocket Launcher";
+		case MOD_ROCKET_SPLASH: return "Raketgevär";
 		case MOD_PLASMA:
-		case MOD_PLASMA_SPLASH: return "Plasmagun";
-		case MOD_RAILGUN: return "Railgun";
-		case MOD_LIGHTNING: return "Lightning Gun";
+		case MOD_PLASMA_SPLASH: return "Plasmapickadull";
+		case MOD_SNIPER: return "Älgstudsare";
+		case MOD_LIGHTNING: return "Elpickadull";
 		case MOD_BFG:
-		case MOD_BFG_SPLASH: return "BFG10K";
+		case MOD_BFG_SPLASH: return "BFG";
 #ifdef MISSIONPACK
-		case MOD_NAIL: return "Nailgun";
-		case MOD_CHAINGUN: return "Chaingun";
-		case MOD_PROXIMITY_MINE: return "Proximity Launcher";
-		case MOD_KAMIKAZE: return "Kamikaze";
-		case MOD_JUICED: return "Prox mine";
+		case MOD_NAIL: return "Spikpickadull";
+		case MOD_CHAINGUN: return "Kulspruta";
+		case MOD_PROXIMITY_MINE: return "Mina";
+		case MOD_KAMIKAZE: return "Självmordsbomb";
+		case MOD_JUICED: return "Mina";
 #endif
-		case MOD_GRAPPLE: return "Grapple";
-		default: return "[unknown weapon]";
+		case MOD_GRAPPLE: return "Gripkrok";
+		default: return "[okänt vapen]";
 	}
 }
 
@@ -325,7 +325,7 @@ char *BotRandomWeaponName(void) {
 		case 3: return "Grenade Launcher";
 		case 4: return "Rocket Launcher";
 		case 5: return "Plasmagun";
-		case 6: return "Railgun";
+		case 6: return "Sniper Rifle";
 		case 7: return "Lightning Gun";
 #ifdef MISSIONPACK
 		case 8: return "Nailgun";
@@ -626,7 +626,7 @@ int BotChat_Death(bot_state_t *bs) {
 #endif
 		else {
 			if ((bs->botdeathtype == MOD_GAUNTLET ||
-				bs->botdeathtype == MOD_RAILGUN ||
+				bs->botdeathtype == MOD_SNIPER ||
 				bs->botdeathtype == MOD_BFG ||
 				bs->botdeathtype == MOD_BFG_SPLASH) && random() < 0.5) {
 
@@ -635,7 +635,7 @@ int BotChat_Death(bot_state_t *bs) {
 							name,												// 0
 							BotWeaponNameForMeansOfDeath(bs->botdeathtype),		// 1
 							NULL);
-				else if (bs->botdeathtype == MOD_RAILGUN)
+				else if (bs->botdeathtype == MOD_SNIPER)
 					BotAI_BotInitialChat(bs, "death_rail",
 							name,												// 0
 							BotWeaponNameForMeansOfDeath(bs->botdeathtype),		// 1
@@ -708,7 +708,7 @@ int BotChat_Kill(bot_state_t *bs) {
 		if (bs->enemydeathtype == MOD_GAUNTLET) {
 			BotAI_BotInitialChat(bs, "kill_gauntlet", name, NULL);
 		}
-		else if (bs->enemydeathtype == MOD_RAILGUN) {
+		else if (bs->enemydeathtype == MOD_SNIPER) {
 			BotAI_BotInitialChat(bs, "kill_rail", name, NULL);
 		}
 		else if (bs->enemydeathtype == MOD_TELEFRAG) {

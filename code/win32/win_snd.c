@@ -51,7 +51,7 @@ static const char *DSoundError( int error ) {
 		return "DSERR_PRIOLEVELNEEDED";
 	}
 
-	return "unknown";
+	return "okänt";
 }
 
 /*

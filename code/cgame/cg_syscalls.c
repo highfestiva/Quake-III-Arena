@@ -410,13 +410,11 @@ e_status trap_CIN_RunCinematic (int handle) {
   return syscall(CG_CIN_RUNCINEMATIC, handle);
 }
  
-
 // draws the current frame
 void trap_CIN_DrawCinematic (int handle) {
   syscall(CG_CIN_DRAWCINEMATIC, handle);
 }
  
-
 // allows you to resize the animation dynamically
 void trap_CIN_SetExtents (int handle, int x, int y, int w, int h) {
   syscall(CG_CIN_SETEXTENTS, handle, x, y, w, h);

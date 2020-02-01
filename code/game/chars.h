@@ -50,7 +50,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define CHARACTERISTIC_AIM_ACCURACY_GRENADELAUNCHER	11	//float [0, 1]
 #define CHARACTERISTIC_AIM_ACCURACY_LIGHTNING		12
 #define CHARACTERISTIC_AIM_ACCURACY_PLASMAGUN		13	//float [0, 1]
-#define CHARACTERISTIC_AIM_ACCURACY_RAILGUN			14
+#define CHARACTERISTIC_AIM_ACCURACY_SNIPERRIFLE			14
 #define CHARACTERISTIC_AIM_ACCURACY_BFG10K			15	//float [0, 1]
 //skill when aiming
 // >  0.0 && <  0.9 = aim is affected by enemy movement

@@ -377,7 +377,7 @@ void S_BeginRegistration( void ) {
 		Com_Memset( s_knownSfx, 0, sizeof( s_knownSfx ) );
 		Com_Memset(sfxHash, 0, sizeof(sfx_t *)*LOOP_HASH);
 
-		S_RegisterSound("sound/feedback/hit.wav", qfalse);		// changed to a sound in baseq3
+		S_RegisterSound("sound/feedback/hit.wav", qfalse);		// changed to a sound in joopdata
 	}
 }
 
@@ -1389,12 +1389,29 @@ int S_FindWavChunk( fileHandle_t f, char *chunk ) {
 	char	name[5];
 	int		len;
 	int		r;
+	int		x;
+	int		lFoundCount = 0;
 
 	name[4] = 0;
 	len = 0;
-	r = FS_Read( name, 4, f );
-	if ( r != 4 ) {
-		return 0;
+	// Jonte: searching in the proximity...
+	for (x = 0; x < 100; ++x)
+	{
+		r = FS_Read( name+lFoundCount, 1, f );
+		if (r != 1)
+		{
+			return 0;
+		}
+		if (name[lFoundCount] != chunk[lFoundCount])
+		{
+			lFoundCount = 0;
+			continue;
+		}
+		lFoundCount = lFoundCount+1;
+		if (lFoundCount == 4)
+		{
+			break;
+		}
 	}
 	len = FGetLittleLong( f );
 	if ( len < 0 || len > 0xfffffff ) {

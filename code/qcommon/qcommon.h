@@ -226,13 +226,13 @@ PROTOCOL
 // NOTE: that stuff only works with two digits protocols
 extern int demo_protocols[];
 
-#define	UPDATE_SERVER_NAME	"update.quake3arena.com"
+#define	UPDATE_SERVER_NAME	"update.Jooperative.com"
 // override on command line, config files etc.
 #ifndef MASTER_SERVER_NAME
-#define MASTER_SERVER_NAME	"master.quake3arena.com"
+#define MASTER_SERVER_NAME	"master.Jooperative.com"
 #endif
 #ifndef AUTHORIZE_SERVER_NAME
-#define	AUTHORIZE_SERVER_NAME	"authorize.quake3arena.com"
+#define	AUTHORIZE_SERVER_NAME	"authorize.Jooperative.com"
 #endif
 
 #define	PORT_MASTER			27950
@@ -509,12 +509,12 @@ issues.
 #define FS_UI_REF		0x02
 #define FS_CGAME_REF	0x04
 #define FS_QAGAME_REF	0x08
-// number of id paks that will never be autodownloaded from baseq3
+// number of id paks that will never be autodownloaded from joopdata
 #define NUM_ID_PAKS		9
 
 #define	MAX_FILE_HANDLES	64
 
-#define BASEGAME "baseq3"
+#define BASEGAME "joopdata"
 
 qboolean FS_Initialized();
 

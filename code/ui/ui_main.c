@@ -44,26 +44,26 @@ static const char *MonthAbbrev[] = {
 
 
 static const char *skillLevels[] = {
-  "I Can Win",
-  "Bring It On",
-  "Hurt Me Plenty",
-  "Hardcore",
-  "Nightmare"
+  "Jag kan",
+  "Kom igen",
+  "Såra mig",
+  "Fetesvårt",
+  "Mardröm"
 };
 
 static const int numSkillLevels = sizeof(skillLevels) / sizeof(const char*);
 
 
 static const char *netSources[] = {
-	"Local",
+	"Lokalt",
 	"Mplayer",
 	"Internet",
-	"Favorites"
+	"Favoriter"
 };
 static const int numNetSources = sizeof(netSources) / sizeof(const char*);
 
 static const serverFilter_t serverFilters[] = {
-	{"All", "" },
+	{"Alla", "" },
 	{"Quake 3 Arena", "" },
 	{"Team Arena", "missionpack" },
 	{"Rocket Arena", "arena" },
@@ -105,11 +105,11 @@ static int const numTeamArenaGameNames = sizeof(teamArenaGameNames) / sizeof(con
 static const int numServerFilters = sizeof(serverFilters) / sizeof(serverFilter_t);
 
 static const char *sortKeys[] = {
-	"Server Name",
-	"Map Name",
-	"Open Player Spots",
-	"Game Type",
-	"Ping Time"
+	"Servernamn",
+	"Banname",
+	"Öppna spelarplatser",
+	"Speltyp",
+	"Ping"
 };
 static const int numSortKeys = sizeof(sortKeys) / sizeof(const char*);
 
@@ -121,7 +121,7 @@ static char* netnames[] = {
 };
 
 #ifndef MISSIONPACK // bk001206
-static char quake3worldMessage[] = "Visit www.quake3world.com - News, Community, Events, Files";
+static char quake3worldMessage[] = "Besök www.quake3world.com - News, Community, Events, Files";
 #endif
 
 static int gamecodetoui[] = {4,2,3,0,5,1,6};
@@ -143,6 +143,7 @@ static void UI_ParseTeamInfo(const char *teamFile);
 static const char *UI_SelectedMap(int index, int *actual);
 static const char *UI_SelectedHead(int index, int *actual);
 static int UI_GetIndexFromSelection(int actual);
+static void UI_RunMenuScript(char **args);
 
 int ProcessNewUI( int command, int arg0, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6 );
 
@@ -205,6 +206,16 @@ int vmMain( int command, int arg0, int arg1, int arg2, int arg3, int arg4, int a
 		  return 0;
 	  case UI_HASUNIQUECDKEY: // mod authors need to observe this
 	    return qtrue; // bk010117 - change this to qfalse for mods!
+
+	  case UI_RUN_MENU_SCRIPT:
+	  {
+		  char* lArgs[10];
+		  lArgs[0] = (char*)arg0;
+		  lArgs[1] = (char*)arg1;
+		  lArgs[2] = (char*)arg2;
+		  UI_RunMenuScript(lArgs);
+	  }
+	  return 0;
 
 	}
 
@@ -298,7 +309,7 @@ int Text_Width(const char *text, float scale, int limit) {
 				s += 2;
 				continue;
 			} else {
-				glyph = &font->glyphs[(int)*s];
+				glyph = &font->glyphs[(unsigned char)*s];
 				out += glyph->xSkip;
 				s++;
 				count++;
@@ -333,7 +344,7 @@ int Text_Height(const char *text, float scale, int limit) {
 				s += 2;
 				continue;
 			} else {
-				glyph = &font->glyphs[(int)*s]; // TTimo: FIXME: getting nasty warnings without the cast, hopefully this doesn't break the VM build
+				glyph = &font->glyphs[(unsigned char)*s]; // TTimo: FIXME: getting nasty warnings without the cast, hopefully this doesn't break the VM build
 	      if (max < glyph->height) {
 		      max = glyph->height;
 			  }
@@ -375,7 +386,7 @@ void Text_Paint(float x, float y, float scale, vec4_t color, const char *text, f
 		}
 		count = 0;
 		while (s && *s && count < len) {
-			glyph = &font->glyphs[(int)*s]; // TTimo: FIXME: getting nasty warnings without the cast, hopefully this doesn't break the VM build
+			glyph = &font->glyphs[(unsigned char)*s]; // TTimo: FIXME: getting nasty warnings without the cast, hopefully this doesn't break the VM build
       //int yadj = Assets.textFont.glyphs[text[i]].bottom + Assets.textFont.glyphs[text[i]].top;
       //float yadj = scale * (Assets.textFont.glyphs[text[i]].imageHeight - Assets.textFont.glyphs[text[i]].height);
 			if ( Q_IsColorString( s ) ) {
@@ -445,7 +456,7 @@ void Text_PaintWithCursor(float x, float y, float scale, vec4_t color, const cha
 		count = 0;
 		glyph2 = &font->glyphs[ (int) cursor]; // bk001206 - possible signed char
 		while (s && *s && count < len) {
-			glyph = &font->glyphs[(int)*s]; // TTimo: FIXME: getting nasty warnings without the cast, hopefully this doesn't break the VM build
+			glyph = &font->glyphs[(unsigned char)*s]; // TTimo: FIXME: getting nasty warnings without the cast, hopefully this doesn't break the VM build
       //int yadj = Assets.textFont.glyphs[text[i]].bottom + Assets.textFont.glyphs[text[i]].top;
       //float yadj = scale * (Assets.textFont.glyphs[text[i]].imageHeight - Assets.textFont.glyphs[text[i]].height);
 			if ( Q_IsColorString( s ) ) {
@@ -542,7 +553,7 @@ static void Text_Paint_Limit(float *maxX, float x, float y, float scale, vec4_t 
 		}
 		count = 0;
 		while (s && *s && count < len) {
-			glyph = &font->glyphs[(int)*s]; // TTimo: FIXME: getting nasty warnings without the cast, hopefully this doesn't break the VM build
+			glyph = &font->glyphs[(unsigned char)*s]; // TTimo: FIXME: getting nasty warnings without the cast, hopefully this doesn't break the VM build
 			if ( Q_IsColorString( s ) ) {
 				memcpy( newColor, g_color_table[ColorIndex(*(s+1))], sizeof( newColor ) );
 				newColor[3] = color[3];
@@ -578,7 +589,7 @@ static void Text_Paint_Limit(float *maxX, float x, float y, float scale, vec4_t 
 
 void UI_ShowPostGame(qboolean newHigh) {
 	trap_Cvar_Set ("cg_cameraOrbit", "0");
-	trap_Cvar_Set("cg_thirdPerson", "0");
+	//trap_Cvar_Set("cg_thirdPerson", "1");
 	trap_Cvar_Set( "sv_killserver", "1" );
 	uiInfo.soundHighScore = newHigh;
   _UI_SetActiveMenu(UIMENU_POSTGAME);
@@ -665,7 +676,7 @@ _UI_Shutdown
 =================
 */
 void _UI_Shutdown( void ) {
-	trap_LAN_SaveCachedServers();
+	//trap_LAN_SaveCachedServers();
 }
 
 char *defaultMenu = NULL;
@@ -1028,7 +1039,7 @@ static void UI_DrawClanName(rectDef_t *rect, float scale, vec4_t color, int text
 
 static void UI_SetCapFragLimits(qboolean uiVars) {
 	int cap = 5;
-	int frag = 10;
+	int frag = 0;
 	if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_OBELISK) {
 		cap = 4;
 	} else if (uiInfo.gameTypes[ui_gameType.integer].gtEnum == GT_HARVESTER) {
@@ -1301,7 +1312,7 @@ static void UI_DrawPlayerModel(rectDef_t *rect) {
   	viewangles[ROLL]  = 0;
   	VectorClear( moveangles );
     UI_PlayerInfo_SetModel( &info, model, head, team);
-    UI_PlayerInfo_SetInfo( &info, LEGS_IDLE, TORSO_STAND, viewangles, vec3_origin, WP_MACHINEGUN, qfalse );
+    UI_PlayerInfo_SetInfo( &info, LEGS_IDLE, TORSO_STAND2, viewangles, vec3_origin, WP_GAUNTLET, qfalse );
 //		UI_RegisterClientModelname( &info, model, head, team);
     updateModel = qfalse;
   }
@@ -1497,7 +1508,7 @@ static void UI_DrawOpponent(rectDef_t *rect) {
   	viewangles[ROLL]  = 0;
   	VectorClear( moveangles );
     UI_PlayerInfo_SetModel( &info2, model, headmodel, "");
-    UI_PlayerInfo_SetInfo( &info2, LEGS_IDLE, TORSO_STAND, viewangles, vec3_origin, WP_MACHINEGUN, qfalse );
+    UI_PlayerInfo_SetInfo( &info2, LEGS_IDLE, TORSO_STAND2, viewangles, vec3_origin, WP_GAUNTLET, qfalse );
 		UI_RegisterClientModelname( &info2, model, headmodel, team);
     updateOpponentModel = qfalse;
   }
@@ -1691,9 +1702,9 @@ static int UI_OwnerDrawWidth(int ownerDraw, float scale) {
 		case UI_REDTEAM5:
 			value = trap_Cvar_VariableValue(va("ui_redteam%i", ownerDraw-UI_REDTEAM1 + 1));
 			if (value <= 0) {
-				text = "Closed";
+				text = "Stängd";
 			} else if (value == 1) {
-				text = "Human";
+				text = "Människa";
 			} else {
 				value -= 2;
 				if (value >= uiInfo.aliasCount) {
@@ -1707,7 +1718,7 @@ static int UI_OwnerDrawWidth(int ownerDraw, float scale) {
 			if (ui_netSource.integer < 0 || ui_netSource.integer > uiInfo.numJoinGameTypes) {
 				ui_netSource.integer = 0;
 			}
-			s = va("Source: %s", netSources[ui_netSource.integer]);
+			s = va("Källa: %s", netSources[ui_netSource.integer]);
 			break;
 		case UI_NETFILTER:
 			if (ui_serverFilterType.integer < 0 || ui_serverFilterType.integer > numServerFilters) {
@@ -1727,9 +1738,9 @@ static int UI_OwnerDrawWidth(int ownerDraw, float scale) {
 			break;
 		case UI_KEYBINDSTATUS:
 			if (Display_KeyBindPending()) {
-				s = "Waiting for new key... Press ESCAPE to cancel";
+				s = "Väntar på ny tangent... Tryck ESC för att avbryta";
 			} else {
-				s = "Press ENTER or CLICK to change, Press BACKSPACE to clear";
+				s = "Tryck RETURN eller KLICKA för att ändra, Tryck BACKSTEG för att rensa";
 			}
 			break;
 		case UI_SERVERREFRESHDATE:
@@ -2565,10 +2576,10 @@ static qboolean UI_BotName_HandleKey(int flags, float *special, int key) {
 		}
 
 		if (game >= GT_TEAM) {
-			if (value >= uiInfo.characterCount + 2) {
+			if (value >= uiInfo.characterCount) {
 				value = 0;
 			} else if (value < 0) {
-				value = uiInfo.characterCount + 2 - 1;
+				value = uiInfo.characterCount - 1;
 			}
 		} else {
 			if (value >= UI_GetNumBots() + 2) {
@@ -2993,12 +3004,12 @@ static void UI_StartSkirmish(qboolean next) {
 	trap_Cvar_Set("ui_pure", va("%i", temp));
 
 	trap_Cvar_Set("cg_cameraOrbit", "0");
-	trap_Cvar_Set("cg_thirdPerson", "0");
+	//trap_Cvar_Set("cg_thirdPerson", "1");
 	trap_Cvar_Set("cg_drawTimer", "1");
 	trap_Cvar_Set("g_doWarmup", "1");
-	trap_Cvar_Set("g_warmup", "15");
+	trap_Cvar_Set("g_warmup", "0");
 	trap_Cvar_Set("sv_pure", "0");
-	trap_Cvar_Set("g_friendlyFire", "0");
+	trap_Cvar_Set("g_friendlyFire", "1");
 	trap_Cvar_Set("g_redTeam", UI_Cvar_VariableString("ui_teamName"));
 	trap_Cvar_Set("g_blueTeam", UI_Cvar_VariableString("ui_opponentName"));
 
@@ -3007,7 +3018,7 @@ static void UI_StartSkirmish(qboolean next) {
 		trap_Cvar_Set("ui_recordSPDemoName", buff);
 	}
 
-	delay = 500;
+	delay = 10000;
 
 	if (g == GT_TOURNAMENT) {
 		trap_Cvar_Set("sv_maxClients", "2");
@@ -3162,7 +3173,7 @@ static void UI_RunMenuScript(char **args) {
 		if (Q_stricmp(name, "StartServer") == 0) {
 			int i, clients, oldclients;
 			float skill;
-			trap_Cvar_Set("cg_thirdPerson", "0");
+			//trap_Cvar_Set("cg_thirdPerson", "1");
 			trap_Cvar_Set("cg_cameraOrbit", "0");
 			trap_Cvar_Set("ui_singlePlayerActive", "0");
 			trap_Cvar_SetValue( "dedicated", Com_Clamp( 0, 2, ui_dedicated.integer ) );
@@ -3194,26 +3205,41 @@ static void UI_RunMenuScript(char **args) {
 
 			trap_Cvar_Set("sv_maxClients", va("%d",clients));
 
+#if 0	//Jonte
 			for (i = 0; i < PLAYERS_PER_TEAM; i++) {
 				int bot = trap_Cvar_VariableValue( va("ui_blueteam%i", i+1));
 				if (bot > 1) {
-					if (ui_actualNetGameType.integer >= GT_TEAM) {
-						Com_sprintf( buff, sizeof(buff), "addbot %s %f %s\n", uiInfo.characterList[bot-2].name, skill, "Blue");
-					} else {
+					//Jonte: if (ui_actualNetGameType.integer >= GT_TEAM) {
+						Com_sprintf( buff, sizeof(buff), "addbot %s %f %s Elaking%i\n", uiInfo.characterList[bot-2].name, skill, "Blue", i+1);
+					/*Jonte: } else {
 						Com_sprintf( buff, sizeof(buff), "addbot %s %f \n", UI_GetBotNameByNumber(bot-2), skill);
-					}
+					}*/
 					trap_Cmd_ExecuteText( EXEC_APPEND, buff );
 				}
 				bot = trap_Cvar_VariableValue( va("ui_redteam%i", i+1));
 				if (bot > 1) {
-					if (ui_actualNetGameType.integer >= GT_TEAM) {
-						Com_sprintf( buff, sizeof(buff), "addbot %s %f %s\n", uiInfo.characterList[bot-2].name, skill, "Red");
-					} else {
+					// Jonte if (ui_actualNetGameType.integer >= GT_TEAM) {
+						Com_sprintf( buff, sizeof(buff), "addbot %s %f %s Hjälpreda%1\n", uiInfo.characterList[bot-2].name, skill, "Red", i+1);
+					/* Jonte } else {
 						Com_sprintf( buff, sizeof(buff), "addbot %s %f \n", UI_GetBotNameByNumber(bot-2), skill);
-					}
+					}*/
 					trap_Cmd_ExecuteText( EXEC_APPEND, buff );
 				}
 			}
+#else	// Jonte
+			trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot James %f Blue 0 SvartePetter\n", skill));
+			trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot James %f Blue 10 Klumpfot\n", skill));
+			trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot James %f Blue 20 Torsken\n", skill));
+			trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot James %f Blue 30 Sunken\n", skill));
+			trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot James %f Blue 40 Fjärten\n", skill));
+			trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot Janet %f Blue 50 Öla-Britta\n", skill));
+			trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot Janet %f Blue 60 Lumpar-Vera\n", skill));
+			trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot Janet %f Blue 70 Häxan\n", skill));
+			trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot Janet %f Blue 80 Pillan\n", skill));
+			trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot Janet %f Blue 90 Fru_Ferling\n", skill));
+			trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot James %f Red 10 Bamse\n", skill));
+			trap_Cmd_ExecuteText( EXEC_APPEND, va("addbot Janet %f Red 20 Tina_the_Tech_Writer\n", skill));
+#endif	// Jonte
 		} else if (Q_stricmp(name, "updateSPMenu") == 0) {
 			UI_SetCapFragLimits(qtrue);
 			UI_MapCountByGameType(qtrue);
@@ -3342,7 +3368,7 @@ static void UI_RunMenuScript(char **args) {
 			uiInfo.serverStatusInfo.numLines = 0;
 			Menu_SetFeederSelection(NULL, FEEDER_FINDPLAYER, 0, NULL);
 		} else if (Q_stricmp(name, "JoinServer") == 0) {
-			trap_Cvar_Set("cg_thirdPerson", "0");
+			trap_Cvar_Set("cg_thirdPerson", "1");
 			trap_Cvar_Set("cg_cameraOrbit", "0");
 			trap_Cvar_Set("ui_singlePlayerActive", "0");
 			if (uiInfo.serverStatus.currentServer >= 0 && uiInfo.serverStatus.currentServer < uiInfo.serverStatus.numDisplayServers) {
@@ -3746,7 +3772,7 @@ static void UI_BuildServerDisplayList(qboolean force) {
 	trap_Cvar_VariableStringBuffer( "cl_motdString", uiInfo.serverStatus.motd, sizeof(uiInfo.serverStatus.motd) );
 	len = strlen(uiInfo.serverStatus.motd);
 	if (len == 0) {
-		strcpy(uiInfo.serverStatus.motd, "Welcome to Team Arena!");
+		strcpy(uiInfo.serverStatus.motd, "Welcome to Jooperative!");
 		len = strlen(uiInfo.serverStatus.motd);
 	} 
 	if (len != uiInfo.serverStatus.motdLen) {
@@ -3849,7 +3875,7 @@ typedef struct
 } serverStatusCvar_t;
 
 serverStatusCvar_t serverStatusCvars[] = {
-	{"sv_hostname", "Name"},
+	{"sv_hostname", "Jontes"},
 	{"Address", ""},
 	{"gamename", "Game name"},
 	{"g_gametype", "Game type"},
@@ -3870,7 +3896,7 @@ static void UI_SortServerStatusInfo( serverStatusInfo_t *info ) {
 	int i, j, index;
 	char *tmp1, *tmp2;
 
-	// FIXME: if "gamename" == "baseq3" or "missionpack" then
+	// FIXME: if "gamename" == "joopdata" or "missionpack" then
 	// replace the gametype number by FFA, CTF etc.
 	//
 	index = 0;
@@ -4343,9 +4369,9 @@ static const char *UI_FeederItemText(float feederID, int index, int column, qhan
 				case SORT_PUNKBUSTER:
 					punkbuster = atoi(Info_ValueForKey(info, "punkbuster"));
 					if ( punkbuster ) {
-						return "Yes";
+						return "Ja";
 					} else {
-						return "No";
+						return "Nej";
 					}
 			}
 		}
@@ -5289,7 +5315,7 @@ void _UI_SetActiveMenu( uiMenuCommand_t menu ) {
 				UI_LoadNonIngame();
 			}
 			Menus_CloseAll();
-			Menus_ActivateByName("endofgame");
+			//Menus_ActivateByName("endofgame");
 		  //UI_ConfirmMenu( "Bad CD Key", NULL, NeedCDKeyAction );
 		  return;
 	  case UIMENU_INGAME:
@@ -5514,9 +5540,9 @@ void UI_DrawConnectScreen( qboolean overlay ) {
 	}
 
 	if (!Q_stricmp(cstate.servername,"localhost")) {
-		Text_PaintCenter(centerPoint, yStart + 48, scale, colorWhite, va("Starting up..."), ITEM_TEXTSTYLE_SHADOWEDMORE);
+		Text_PaintCenter(centerPoint, yStart + 48, scale, colorWhite, va("Startar server..."), ITEM_TEXTSTYLE_SHADOWEDMORE);
 	} else {
-		strcpy(text, va("Connecting to %s", cstate.servername));
+		strcpy(text, va("Ansluter till %s", cstate.servername));
 		Text_PaintCenter(centerPoint, yStart + 48, scale, colorWhite,text , ITEM_TEXTSTYLE_SHADOWEDMORE);
 	}
 
@@ -5534,10 +5560,10 @@ void UI_DrawConnectScreen( qboolean overlay ) {
 
 	switch ( cstate.connState ) {
 	case CA_CONNECTING:
-		s = va("Awaiting connection...%i", cstate.connectPacketCount);
+		s = va("Väntar på anslutning...%i", cstate.connectPacketCount);
 		break;
 	case CA_CHALLENGING:
-		s = va("Awaiting challenge...%i", cstate.connectPacketCount);
+		s = va("Inväntar utmaning...%i", cstate.connectPacketCount);
 		break;
 	case CA_CONNECTED: {
 		char downloadName[MAX_INFO_VALUE];
@@ -5548,7 +5574,7 @@ void UI_DrawConnectScreen( qboolean overlay ) {
 				return;
 			}
 		}
-		s = "Awaiting gamestate...";
+		s = "Väntar på snabbskott...";
 		break;
 	case CA_LOADING:
 		return;
@@ -5701,19 +5727,19 @@ vmCvar_t	ui_serverStatusTimeOut;
 
 // bk001129 - made static to avoid aliasing
 static cvarTable_t		cvarTable[] = {
-	{ &ui_ffa_fraglimit, "ui_ffa_fraglimit", "20", CVAR_ARCHIVE },
-	{ &ui_ffa_timelimit, "ui_ffa_timelimit", "0", CVAR_ARCHIVE },
+	{ &ui_ffa_fraglimit, "ui_ffa_fraglimit", "100", CVAR_ROM },
+	{ &ui_ffa_timelimit, "ui_ffa_timelimit", "0", CVAR_ROM },
 
-	{ &ui_tourney_fraglimit, "ui_tourney_fraglimit", "0", CVAR_ARCHIVE },
-	{ &ui_tourney_timelimit, "ui_tourney_timelimit", "15", CVAR_ARCHIVE },
+	{ &ui_tourney_fraglimit, "ui_tourney_fraglimit", "100", CVAR_ROM },
+	{ &ui_tourney_timelimit, "ui_tourney_timelimit", "0", CVAR_ROM },
 
-	{ &ui_team_fraglimit, "ui_team_fraglimit", "0", CVAR_ARCHIVE },
-	{ &ui_team_timelimit, "ui_team_timelimit", "20", CVAR_ARCHIVE },
-	{ &ui_team_friendly, "ui_team_friendly",  "1", CVAR_ARCHIVE },
+	{ &ui_team_fraglimit, "ui_team_fraglimit", "100", CVAR_ROM },
+	{ &ui_team_timelimit, "ui_team_timelimit", "0", CVAR_ROM },
+	{ &ui_team_friendly, "ui_team_friendly",  "1", CVAR_ROM },
 
-	{ &ui_ctf_capturelimit, "ui_ctf_capturelimit", "8", CVAR_ARCHIVE },
-	{ &ui_ctf_timelimit, "ui_ctf_timelimit", "30", CVAR_ARCHIVE },
-	{ &ui_ctf_friendly, "ui_ctf_friendly",  "0", CVAR_ARCHIVE },
+	{ &ui_ctf_capturelimit, "ui_ctf_capturelimit", "100", CVAR_ROM },
+	{ &ui_ctf_timelimit, "ui_ctf_timelimit", "0", CVAR_ROM },
+	{ &ui_ctf_friendly, "ui_ctf_friendly",  "1", CVAR_ROM },
 
 	{ &ui_arenasFile, "g_arenasFile", "", CVAR_INIT|CVAR_ROM },
 	{ &ui_botsFile, "g_botsFile", "", CVAR_INIT|CVAR_ROM },
@@ -5724,7 +5750,7 @@ static cvarTable_t		cvarTable[] = {
 	{ &ui_spScores5, "g_spScores5", "", CVAR_ARCHIVE | CVAR_ROM },
 	{ &ui_spAwards, "g_spAwards", "", CVAR_ARCHIVE | CVAR_ROM },
 	{ &ui_spVideos, "g_spVideos", "", CVAR_ARCHIVE | CVAR_ROM },
-	{ &ui_spSkill, "g_spSkill", "2", CVAR_ARCHIVE },
+	{ &ui_spSkill, "g_spSkill", "5", CVAR_ARCHIVE },
 
 	{ &ui_spSelection, "ui_spSelection", "", CVAR_ROM },
 
@@ -5755,7 +5781,7 @@ static cvarTable_t		cvarTable[] = {
 	{ &ui_server14, "server14", "", CVAR_ARCHIVE },
 	{ &ui_server15, "server15", "", CVAR_ARCHIVE },
 	{ &ui_server16, "server16", "", CVAR_ARCHIVE },
-	{ &ui_cdkeychecked, "ui_cdkeychecked", "0", CVAR_ROM },
+	{ &ui_cdkeychecked, "ui_cdkeychecked", "1", CVAR_ROM },
 	{ &ui_new, "ui_new", "0", CVAR_TEMP },
 	{ &ui_debug, "ui_debug", "0", CVAR_TEMP },
 	{ &ui_initialized, "ui_initialized", "0", CVAR_TEMP },
@@ -5764,10 +5790,10 @@ static cvarTable_t		cvarTable[] = {
 	{ &ui_redteam, "ui_redteam", "Pagans", CVAR_ARCHIVE },
 	{ &ui_blueteam, "ui_blueteam", "Stroggs", CVAR_ARCHIVE },
 	{ &ui_dedicated, "ui_dedicated", "0", CVAR_ARCHIVE },
-	{ &ui_gameType, "ui_gametype", "3", CVAR_ARCHIVE },
-	{ &ui_joinGameType, "ui_joinGametype", "0", CVAR_ARCHIVE },
-	{ &ui_netGameType, "ui_netGametype", "3", CVAR_ARCHIVE },
-	{ &ui_actualNetGameType, "ui_actualNetGametype", "3", CVAR_ARCHIVE },
+	{ &ui_gameType, "ui_gametype", "3", CVAR_ROM },
+	{ &ui_joinGameType, "ui_joinGametype", "3", CVAR_ROM },
+	{ &ui_netGameType, "ui_netGametype", "3", CVAR_ROM },
+	{ &ui_actualNetGameType, "ui_actualNetGametype", "3", CVAR_ROM },
 	{ &ui_redteam1, "ui_redteam1", "0", CVAR_ARCHIVE },
 	{ &ui_redteam2, "ui_redteam2", "0", CVAR_ARCHIVE },
 	{ &ui_redteam3, "ui_redteam3", "0", CVAR_ARCHIVE },
@@ -5807,7 +5833,7 @@ static cvarTable_t		cvarTable[] = {
 	{ &ui_scoreTimeBonus, "ui_scoreTimeBonus", "0", CVAR_ARCHIVE},
 	{ &ui_scoreSkillBonus, "ui_scoreSkillBonus", "0", CVAR_ARCHIVE},
 	{ &ui_scoreShutoutBonus, "ui_scoreShutoutBonus", "0", CVAR_ARCHIVE},
-	{ &ui_fragLimit, "ui_fragLimit", "10", 0},
+	{ &ui_fragLimit, "ui_fragLimit", "100", CVAR_ROM },
 	{ &ui_captureLimit, "ui_captureLimit", "5", 0},
 	{ &ui_smallFont, "ui_smallFont", "0.25", CVAR_ARCHIVE},
 	{ &ui_bigFont, "ui_bigFont", "0.4", CVAR_ARCHIVE},
@@ -5816,7 +5842,7 @@ static cvarTable_t		cvarTable[] = {
 	{ &ui_hudFiles, "cg_hudFiles", "ui/hud.txt", CVAR_ARCHIVE},
 	{ &ui_recordSPDemo, "ui_recordSPDemo", "0", CVAR_ARCHIVE},
 	{ &ui_teamArenaFirstRun, "ui_teamArenaFirstRun", "0", CVAR_ARCHIVE},
-	{ &ui_realWarmUp, "g_warmup", "20", CVAR_ARCHIVE},
+	{ &ui_realWarmUp, "g_warmup", "0", CVAR_ARCHIVE},
 	{ &ui_realCaptureLimit, "capturelimit", "8", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART},
 	{ &ui_serverStatusTimeOut, "ui_serverStatusTimeOut", "7000", CVAR_ARCHIVE},
 

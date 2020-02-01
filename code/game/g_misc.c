@@ -76,8 +76,15 @@ TELEPORTERS
 =================================================================================
 */
 
+cvar_t *Cvar_Get( const char *var_name, const char *var_value, int flags );
+
 void TeleportPlayer( gentity_t *player, vec3_t origin, vec3_t angles ) {
 	gentity_t	*tent;
+	char lLastMapWasCurrent;
+	int lMapIndex;
+	char lVarName[30];
+	char lNextMapName[30];
+	char lCurMapName[30];
 
 	// use temp events at source and destination to prevent the effect
 	// from getting dropped by a second player event
@@ -87,6 +94,32 @@ void TeleportPlayer( gentity_t *player, vec3_t origin, vec3_t angles ) {
 
 		tent = G_TempEntity( origin, EV_PLAYER_TELEPORT_IN );
 		tent->s.clientNum = player->s.clientNum;
+
+		// Go to next level.
+		lLastMapWasCurrent = 0;
+		trap_Cvar_VariableStringBuffer("currentmap", lCurMapName, sizeof(lCurMapName));
+		for (lMapIndex = 0; lMapIndex < 100; ++lMapIndex)
+		{
+			Com_sprintf(lVarName, sizeof(lVarName), "map%i", lMapIndex);
+			lNextMapName[0] = 0;
+			trap_Cvar_VariableStringBuffer(lVarName, lNextMapName, sizeof(lNextMapName));
+			if (!lNextMapName[0])
+			{
+				// TODO: send "game over"!
+				break;
+			}
+			else if (lLastMapWasCurrent)
+			{
+				Com_sprintf(lVarName, sizeof(lVarName), "map %s", lNextMapName);
+				trap_Cvar_Set("nextmap", lVarName);
+				LogExit("The search for fun gameplay continues...");
+				break;
+			}
+			else if (Q_strncmp(lCurMapName, lNextMapName, sizeof(lCurMapName)) == 0)
+			{
+				lLastMapWasCurrent = 1;
+			}
+		}
 	}
 
 	// unlink to make sure it can't possibly interfere with G_KillBox

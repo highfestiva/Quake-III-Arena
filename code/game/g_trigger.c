@@ -427,6 +427,12 @@ void func_timer_think( gentity_t *self ) {
 	G_UseTargets (self, self->activator);
 	// set time before next firing
 	self->nextthink = level.time + 1000 * ( self->wait + crandom() * self->random );
+
+	// One-shot? (Turn off after first trigger.)
+	if (self->spawnflags & 2)
+	{
+		self->nextthink = 0;
+	}
 }
 
 void func_timer_use( gentity_t *self, gentity_t *other, gentity_t *activator ) {
@@ -439,7 +445,7 @@ void func_timer_use( gentity_t *self, gentity_t *other, gentity_t *activator ) {
 	}
 
 	// turn it on
-	func_timer_think (self);
+	self->nextthink = level.time + 1000 * ( self->wait + crandom() * self->random );
 }
 
 void SP_func_timer( gentity_t *self ) {

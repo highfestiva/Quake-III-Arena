@@ -1258,6 +1258,12 @@ AINode_Respawn
 ==================
 */
 int AINode_Respawn(bot_state_t *bs) {
+	// Jonte: delete team member bots when they die.
+	if (BotTeam(bs) == TEAM_RED)
+	{
+		trap_DropClient(bs->cur_ps.clientNum, "var för korkad");
+	}
+
 	// if waiting for the actual respawn
 	if (bs->respawn_wait) {
 		if (!BotIsDead(bs)) {
@@ -1306,8 +1312,8 @@ int BotSelectActivateWeapon(bot_state_t *bs) {
 	else if (bs->inventory[INVENTORY_NAILGUN] > 0 && bs->inventory[INVENTORY_NAILS] > 0)
 		return WEAPONINDEX_NAILGUN;
 #endif
-	else if (bs->inventory[INVENTORY_RAILGUN] > 0 && bs->inventory[INVENTORY_SLUGS] > 0)
-		return WEAPONINDEX_RAILGUN;
+	else if (bs->inventory[INVENTORY_SNIPERRIFLE] > 0 && bs->inventory[INVENTORY_SLUGS] > 0)
+		return WEAPONINDEX_SNIPERRIFLE;
 	else if (bs->inventory[INVENTORY_ROCKETLAUNCHER] > 0 && bs->inventory[INVENTORY_ROCKETS] > 0)
 		return WEAPONINDEX_ROCKET_LAUNCHER;
 	else if (bs->inventory[INVENTORY_BFG10K] > 0 && bs->inventory[INVENTORY_BFGAMMO] > 0)
@@ -1536,7 +1542,7 @@ int AINode_Seek_ActivateEntity(bot_state_t *bs) {
 			//if the bot touches the current goal
 			if (trap_BotTouchingGoal(bs->origin, goal)) {
 #ifdef DEBUG
-				BotAI_Print(PRT_MESSAGE, "touched button or trigger\n");
+				BotAI_Print(PRT_MESSAGE, "pillade på knapp\n");
 #endif //DEBUG
 				bs->activatestack->time = 0;
 			}

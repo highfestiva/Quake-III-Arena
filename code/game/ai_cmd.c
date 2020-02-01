@@ -153,7 +153,7 @@ void BotPrintTeamGoal(bot_state_t *bs) {
 BotGetItemTeamGoal
 
 FIXME: add stuff like "upper rocket launcher"
-"the rl near the railgun", "lower grenade launcher" etc.
+"the rl near the sniper rifle", "lower grenade launcher" etc.
 ==================
 */
 int BotGetItemTeamGoal(char *goalname, bot_goal_t *goal) {
@@ -1522,7 +1522,7 @@ void BotMatch_WhereAreYou(bot_state_t *bs, bot_match_t *match) {
 		"Grenade Launcher",
 		"Rocket Launcher",
 		"Plasmagun",
-		"Railgun",
+		"Sniper Rifle",
 		"Lightning Gun",
 		"BFG10K",
 		"Quad Damage",

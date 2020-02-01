@@ -191,7 +191,7 @@ void SV_AuthorizeIpPacket( netadr_t from ) {
 			"challengeResponse %i", svs.challenges[i].challenge );
 		return;
 	}
-	if ( !Q_stricmp( s, "unknown" ) ) {
+	if ( !Q_stricmp( s, "okänt" ) ) {
 		if (!r) {
 			NET_OutOfBandPrint( NS_SERVER, svs.challenges[i].adr, "print\nAwaiting CD key authorization\n" );
 		} else {
@@ -768,7 +768,7 @@ void SV_WriteDownloadToClient( client_t *cl , msg_t *msg )
 		Com_Printf( "clientDownload: %d : begining \"%s\"\n", cl - svs.clients, cl->downloadName );
 
 		missionPack = FS_idPak(cl->downloadName, "missionpack");
-		idPack = missionPack || FS_idPak(cl->downloadName, "baseq3");
+		idPack = missionPack || FS_idPak(cl->downloadName, "joopdata");
 
 		if ( !sv_allowDownload->integer || idPack ||
 			( cl->downloadSize = FS_SV_FOpenFileRead( cl->downloadName, &cl->download ) ) <= 0 ) {

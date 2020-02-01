@@ -322,7 +322,7 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 		attacker->client->pers.teamState.lastfraggedcarrier = level.time;
 		AddScore(attacker, targ->r.currentOrigin, CTF_FRAG_CARRIER_BONUS);
 		attacker->client->pers.teamState.fragcarrier++;
-		PrintMsg(NULL, "%s" S_COLOR_WHITE " fragged %s's flag carrier!\n",
+		PrintMsg(NULL, "%s" S_COLOR_WHITE " pangade %s's flaggbärare!\n",
 			attacker->client->pers.netname, TeamName(team));
 
 		// the target had the flag, clear the hurt carrier
@@ -340,7 +340,7 @@ void Team_FragBonuses(gentity_t *targ, gentity_t *inflictor, gentity_t *attacker
 		attacker->client->pers.teamState.lastfraggedcarrier = level.time;
 		AddScore(attacker, targ->r.currentOrigin, CTF_FRAG_CARRIER_BONUS * tokens * tokens);
 		attacker->client->pers.teamState.fragcarrier++;
-		PrintMsg(NULL, "%s" S_COLOR_WHITE " fragged %s's skull carrier!\n",
+		PrintMsg(NULL, "%s" S_COLOR_WHITE " pangade %s's kraniebärare!\n",
 			attacker->client->pers.netname, TeamName(team));
 
 		// the target had the flag, clear the hurt carrier
@@ -987,21 +987,21 @@ gentity_t *SelectRandomTeamSpawnPoint( int teamstate, team_t team ) {
 	gentity_t	*spots[MAX_TEAM_SPAWN_POINTS];
 	char		*classname;
 
-	if (teamstate == TEAM_BEGIN) {
+	//Jonte if (teamstate == TEAM_BEGIN) {
 		if (team == TEAM_RED)
 			classname = "team_CTF_redplayer";
 		else if (team == TEAM_BLUE)
 			classname = "team_CTF_blueplayer";
 		else
 			return NULL;
-	} else {
+	/* Jonte } else {
 		if (team == TEAM_RED)
 			classname = "team_CTF_redspawn";
 		else if (team == TEAM_BLUE)
 			classname = "team_CTF_bluespawn";
 		else
 			return NULL;
-	}
+	}*/
 	count = 0;
 
 	spot = NULL;

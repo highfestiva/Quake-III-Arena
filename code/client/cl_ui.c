@@ -1094,6 +1094,10 @@ int CL_UISystemCalls( int *args ) {
 	case UI_CIN_RUNCINEMATIC:
 	  return CIN_RunCinematic(args[1]);
 
+	/*case UI_R_REGISTERWEAPON:
+	  CG_RegisterWeapon(args[1]);
+	  return (0);*/
+
 	case UI_CIN_DRAWCINEMATIC:
 	  CIN_DrawCinematic(args[1]);
 	  return 0;
@@ -1166,10 +1170,10 @@ void CL_InitUI( void ) {
 		// init for this gamestate
 		VM_Call( uivm, UI_INIT, (cls.state >= CA_AUTHORIZING && cls.state < CA_ACTIVE));
 	}
-	else if (v != UI_API_VERSION) {
+	/*else if (v != UI_API_VERSION) {
 		Com_Error( ERR_DROP, "User Interface is version %d, expected %d", v, UI_API_VERSION );
 		cls.uiStarted = qfalse;
-	}
+	}*/
 	else {
 		// init for this gamestate
 		VM_Call( uivm, UI_INIT, (cls.state >= CA_AUTHORIZING && cls.state < CA_ACTIVE) );

@@ -307,7 +307,7 @@ qboolean CG_DrawOldScoreboard( void ) {
 
 	// fragged by ... line
 	if ( cg.killerName[0] ) {
-		s = va("Fragged by %s", cg.killerName );
+		s = va("Pangad av %s", cg.killerName );
 		w = CG_DrawStrlen( s ) * BIGCHAR_WIDTH;
 		x = ( SCREEN_WIDTH - w ) / 2;
 		y = 40;
@@ -327,11 +327,11 @@ qboolean CG_DrawOldScoreboard( void ) {
 		}
 	} else {
 		if ( cg.teamScores[0] == cg.teamScores[1] ) {
-			s = va("Teams are tied at %i", cg.teamScores[0] );
+			s = va("Lagen är lika med %i poäng", cg.teamScores[0] );
 		} else if ( cg.teamScores[0] >= cg.teamScores[1] ) {
-			s = va("Red leads %i to %i",cg.teamScores[0], cg.teamScores[1] );
+			s = va("Röda leder %i mot %i",cg.teamScores[0], cg.teamScores[1] );
 		} else {
-			s = va("Blue leads %i to %i",cg.teamScores[1], cg.teamScores[0] );
+			s = va("Blå leder %i mot %i",cg.teamScores[1], cg.teamScores[0] );
 		}
 
 		w = CG_DrawStrlen( s ) * BIGCHAR_WIDTH;

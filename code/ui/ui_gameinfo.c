@@ -141,6 +141,7 @@ void UI_LoadArenas( void ) {
 	int			i, n;
 	int			dirlen;
 	char		*type;
+	char lVarName[30];
 
 	ui_numArenas = 0;
 	uiInfo.mapCount = 0;
@@ -176,6 +177,9 @@ void UI_LoadArenas( void ) {
 		uiInfo.mapList[uiInfo.mapCount].levelShot = -1;
 		uiInfo.mapList[uiInfo.mapCount].imageName = String_Alloc(va("levelshots/%s", uiInfo.mapList[uiInfo.mapCount].mapLoadName));
 		uiInfo.mapList[uiInfo.mapCount].typeBits = 0;
+
+		Com_sprintf(lVarName, sizeof(lVarName), "map%i", n);
+		trap_Cvar_Set(lVarName, uiInfo.mapList[uiInfo.mapCount].mapLoadName);
 
 		type = Info_ValueForKey( ui_arenaInfos[n], "type" );
 		// if no type specified, it will be treated as "ffa"

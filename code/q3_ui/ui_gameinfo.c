@@ -811,10 +811,11 @@ void UI_InitGameinfo( void ) {
 	UI_LoadArenas();
 	UI_LoadBots();
 
+	/* Jonte
 	if( (trap_Cvar_VariableValue( "fs_restrict" )) || (ui_numSpecialSinglePlayerArenas == 0 && ui_numSinglePlayerArenas == 4) ) {
 		uis.demoversion = qtrue;
 	}
-	else {
+	else*/ {
 		uis.demoversion = qfalse;
 	}
 }

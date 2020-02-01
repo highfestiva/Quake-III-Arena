@@ -209,8 +209,8 @@ int Pickup_Holdable( gentity_t *ent, gentity_t *other ) {
 void Add_Ammo (gentity_t *ent, int weapon, int count)
 {
 	ent->client->ps.ammo[weapon] += count;
-	if ( ent->client->ps.ammo[weapon] > 200 ) {
-		ent->client->ps.ammo[weapon] = 200;
+	if ( ent->client->ps.ammo[weapon] > 800 ) {
+		ent->client->ps.ammo[weapon] = 800;
 	}
 }
 
@@ -801,7 +801,7 @@ void ClearRegisteredItems( void ) {
 	memset( itemRegistered, 0, sizeof( itemRegistered ) );
 
 	// players always start with the base weapon
-	RegisterItem( BG_FindItemForWeapon( WP_MACHINEGUN ) );
+	//RegisterItem( BG_FindItemForWeapon( WP_MACHINEGUN ) );
 	RegisterItem( BG_FindItemForWeapon( WP_GAUNTLET ) );
 #ifdef MISSIONPACK
 	if( g_gametype.integer == GT_HARVESTER ) {

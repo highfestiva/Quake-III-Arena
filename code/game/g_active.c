@@ -387,7 +387,7 @@ qboolean ClientInactivityTimer( gclient_t *client ) {
 		}
 		if ( level.time > client->inactivityTime - 10000 && !client->inactivityWarning ) {
 			client->inactivityWarning = qtrue;
-			trap_SendServerCommand( client - level.clients, "cp \"Ten seconds until inactivity drop!\n\"" );
+			trap_SendServerCommand( client - level.clients, "cp \"Tio sekunder tills du kastas ut!\n\"" );
 		}
 	}
 	return qtrue;
@@ -468,7 +468,7 @@ void ClientTimerActions( gentity_t *ent, int msec ) {
 #ifdef MISSIONPACK
 	if( bg_itemlist[client->ps.stats[STAT_PERSISTANT_POWERUP]].giTag == PW_AMMOREGEN ) {
 		int w, max, inc, t, i;
-    int weapList[]={WP_MACHINEGUN,WP_SHOTGUN,WP_GRENADE_LAUNCHER,WP_ROCKET_LAUNCHER,WP_LIGHTNING,WP_RAILGUN,WP_PLASMAGUN,WP_BFG,WP_NAILGUN,WP_PROX_LAUNCHER,WP_CHAINGUN};
+    int weapList[]={WP_MACHINEGUN,WP_SHOTGUN,WP_GRENADE_LAUNCHER,WP_ROCKET_LAUNCHER,WP_LIGHTNING,WP_SNIPERRIFLE,WP_PLASMAGUN,WP_BFG,WP_NAILGUN,WP_PROX_LAUNCHER,WP_CHAINGUN};
     int weapCount = sizeof(weapList) / sizeof(int);
 		//
     for (i = 0; i < weapCount; i++) {
@@ -480,7 +480,7 @@ void ClientTimerActions( gentity_t *ent, int msec ) {
 			  case WP_GRENADE_LAUNCHER: max = 10; inc = 1; t = 2000; break;
 			  case WP_ROCKET_LAUNCHER: max = 10; inc = 1; t = 1750; break;
 			  case WP_LIGHTNING: max = 50; inc = 5; t = 1500; break;
-			  case WP_RAILGUN: max = 10; inc = 1; t = 1750; break;
+			  case WP_SNIPERRIFLE: max = 10; inc = 1; t = 1750; break;
 			  case WP_PLASMAGUN: max = 50; inc = 5; t = 1500; break;
 			  case WP_BFG: max = 10; inc = 1; t = 4000; break;
 			  case WP_NAILGUN: max = 10; inc = 1; t = 1250; break;
@@ -554,6 +554,7 @@ void ClientEvents( gentity_t *ent, int oldEventSequence ) {
 		event = client->ps.events[ i & (MAX_PS_EVENTS-1) ];
 
 		switch ( event ) {
+		case EV_FALL_SHORT:
 		case EV_FALL_MEDIUM:
 		case EV_FALL_FAR:
 			if ( ent->s.eType != ET_PLAYER ) {
@@ -563,9 +564,11 @@ void ClientEvents( gentity_t *ent, int oldEventSequence ) {
 				break;
 			}
 			if ( event == EV_FALL_FAR ) {
-				damage = 10;
+				damage = 200;
+			} else if ( event == EV_FALL_MEDIUM ) {
+				damage = 60;
 			} else {
-				damage = 5;
+				damage = 40;
 			}
 			VectorSet (dir, 0, 0, 1);
 			ent->pain_debounce_time = level.time + 200;	// no normal pain sound
@@ -625,7 +628,8 @@ void ClientEvents( gentity_t *ent, int oldEventSequence ) {
 				}
 			}
 #endif
-			SelectSpawnPoint( ent->client->ps.origin, origin, angles );
+			//Jonte SelectSpawnPoint( ent->client->ps.origin, origin, angles );
+			SelectCTFSpawnPoint(ent->client->sess.sessionTeam, ent->client->pers.teamState.state, ent->client->ps.origin, angles);
 			TeleportPlayer( ent, origin, angles );
 			break;
 

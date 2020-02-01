@@ -124,7 +124,7 @@ tryagain:
 		MAKERGB( pi->flashDlightColor, 0.6f, 0.6f, 1 );
 		break;
 
-	case WP_RAILGUN:
+	case WP_SNIPERRIFLE:
 		MAKERGB( pi->flashDlightColor, 1, 0.5f, 0 );
 		break;
 

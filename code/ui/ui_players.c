@@ -80,15 +80,15 @@ tryagain:
 	}
 
 	if( pi->weaponModel == 0 ) {
-		if( weaponNum == WP_MACHINEGUN ) {
+		if( weaponNum == WP_GAUNTLET ) {
 			weaponNum = WP_NONE;
 			goto tryagain;
 		}
-		weaponNum = WP_MACHINEGUN;
+		weaponNum = WP_GAUNTLET;
 		goto tryagain;
 	}
 
-	if ( weaponNum == WP_MACHINEGUN || weaponNum == WP_GAUNTLET || weaponNum == WP_BFG ) {
+	if ( weaponNum == WP_CHAINGUN || weaponNum == WP_GAUNTLET || weaponNum == WP_BFG ) {
 		strcpy( path, item->world_model[0] );
 		COM_StripExtension( path, path );
 		strcat( path, "_barrel.md3" );
@@ -125,7 +125,7 @@ tryagain:
 		MAKERGB( pi->flashDlightColor, 0.6f, 0.6f, 1 );
 		break;
 
-	case WP_RAILGUN:
+	case WP_SNIPERRIFLE:
 		MAKERGB( pi->flashDlightColor, 1, 0.5f, 0 );
 		break;
 
@@ -834,23 +834,32 @@ void UI_DrawPlayer( float x, float y, float w, float h, playerInfo_t *pi, int ti
 	//
 	// add the spinning barrel
 	//
-	if ( pi->realWeapon == WP_MACHINEGUN || pi->realWeapon == WP_GAUNTLET || pi->realWeapon == WP_BFG ) {
-		vec3_t	angles;
+	if ( pi->realWeapon == WP_CHAINGUN || pi->realWeapon == WP_GAUNTLET || pi->realWeapon == WP_BFG ) {
+		vec3_t angles;
+		vec3_t lAxis2[3];
+		vec3_t lAxis3[3];
 
 		memset( &barrel, 0, sizeof(barrel) );
 		VectorCopy( origin, barrel.lightingOrigin );
 		barrel.renderfx = renderfx;
 
 		barrel.hModel = pi->barrelModel;
+		pi->barrelSpinning = 1;
 		angles[YAW] = 0;
 		angles[PITCH] = 0;
-		angles[ROLL] = UI_MachinegunSpinAngle( pi );
-		if( pi->realWeapon == WP_GAUNTLET || pi->realWeapon == WP_BFG ) {
+		angles[ROLL] = UI_MachinegunSpinAngle(pi);
+		/*if( pi->realWeapon == WP_GAUNTLET || pi->realWeapon == WP_BFG ) {
 			angles[PITCH] = angles[ROLL];
 			angles[ROLL] = 0;
-		}
-		AnglesToAxis( angles, barrel.axis );
-
+		}*/
+		// Jonte: trying to fix rotation on mixer. Hard coded, fuck yeah!
+		AnglesToAxis(angles, lAxis2);
+		angles[YAW] = 0;
+		angles[PITCH] = 348;
+		angles[ROLL] = 0;
+		AnglesToAxis(angles, lAxis3);
+		MatrixMultiply(lAxis3, lAxis2, barrel.axis);
+		
 		UI_PositionRotatedEntityOnTag( &barrel, &gun, pi->weaponModel, "tag_barrel");
 
 		trap_R_AddRefEntityToScene( &barrel );
@@ -1250,7 +1259,7 @@ UI_PlayerInfo_SetModel
 void UI_PlayerInfo_SetModel( playerInfo_t *pi, const char *model, const char *headmodel, char *teamName ) {
 	memset( pi, 0, sizeof(*pi) );
 	UI_RegisterClientModelname( pi, model, headmodel, teamName );
-	pi->weapon = WP_MACHINEGUN;
+	pi->weapon = WP_GAUNTLET;
 	pi->currentWeapon = pi->weapon;
 	pi->lastWeapon = pi->weapon;
 	pi->pendingWeapon = -1;

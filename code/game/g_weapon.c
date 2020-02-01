@@ -156,12 +156,10 @@ void SnapVectorTowards( vec3_t v, vec3_t to ) {
 #define	MACHINEGUN_DAMAGE	7
 #define	MACHINEGUN_TEAM_DAMAGE	5		// wimpier MG in teamplay
 
-void Bullet_Fire (gentity_t *ent, float spread, int damage ) {
+void Bullet_Fire (gentity_t *ent, float spread, int damage, int mod ) {
 	trace_t		tr;
 	vec3_t		end;
-#ifdef MISSIONPACK
 	vec3_t		impactpoint, bouncedir;
-#endif
 	float		r;
 	float		u;
 	gentity_t	*tent;
@@ -204,7 +202,6 @@ void Bullet_Fire (gentity_t *ent, float spread, int damage ) {
 		tent->s.otherEntityNum = ent->s.number;
 
 		if ( traceEnt->takedamage) {
-#ifdef MISSIONPACK
 			if ( traceEnt->client && traceEnt->client->invulnerabilityTime > level.time ) {
 				if (G_InvulnerabilityEffect( traceEnt, forward, tr.endpos, impactpoint, bouncedir )) {
 					G_BounceProjectile( muzzle, impactpoint, bouncedir, end );
@@ -219,12 +216,9 @@ void Bullet_Fire (gentity_t *ent, float spread, int damage ) {
 				continue;
 			}
 			else {
-#endif
 				G_Damage( traceEnt, ent, ent, forward, tr.endpos,
-					damage, 0, MOD_MACHINEGUN);
-#ifdef MISSIONPACK
+					damage, 0, mod);
 			}
-#endif
 		}
 		break;
 	}
@@ -426,7 +420,7 @@ void Weapon_Plasmagun_Fire (gentity_t *ent) {
 /*
 ======================================================================
 
-RAILGUN
+SNIPERRIFLE
 
 ======================================================================
 */
@@ -434,13 +428,13 @@ RAILGUN
 
 /*
 =================
-weapon_railgun_fire
+weapon_sniperrifle_fire
 =================
 */
-#define	MAX_RAIL_HITS	4
-void weapon_railgun_fire (gentity_t *ent) {
+#define	MAX_SNIPER_HITS	4
+void weapon_sniperrifle_fire (gentity_t *ent) {
 	vec3_t		end;
-#ifdef MISSIONPACK
+#if 0	// Sniper shots don't bounce. #ifdef MISSIONPACK
 	vec3_t impactpoint, bouncedir;
 #endif
 	trace_t		trace;
@@ -451,13 +445,13 @@ void weapon_railgun_fire (gentity_t *ent) {
 	int			hits;
 	int			unlinked;
 	int			passent;
-	gentity_t	*unlinkedEntities[MAX_RAIL_HITS];
+	gentity_t	*unlinkedEntities[MAX_SNIPER_HITS];
 
 	damage = 100 * s_quadFactor;
 
 	VectorMA (muzzle, 8192, forward, end);
 
-	// trace only against the solids, so the railgun will go through people
+	// trace only against the solids, so the sniper rifle will go through people
 	unlinked = 0;
 	hits = 0;
 	passent = ent->s.number;
@@ -468,14 +462,14 @@ void weapon_railgun_fire (gentity_t *ent) {
 		}
 		traceEnt = &g_entities[ trace.entityNum ];
 		if ( traceEnt->takedamage ) {
-#ifdef MISSIONPACK
+#if 0	// Sniper rifle don't bounce. //#ifdef MISSIONPACK
 			if ( traceEnt->client && traceEnt->client->invulnerabilityTime > level.time ) {
 				if ( G_InvulnerabilityEffect( traceEnt, forward, trace.endpos, impactpoint, bouncedir ) ) {
 					G_BounceProjectile( muzzle, impactpoint, bouncedir, end );
 					// snap the endpos to integers to save net bandwidth, but nudged towards the line
 					SnapVectorTowards( trace.endpos, muzzle );
-					// send railgun beam effect
-					tent = G_TempEntity( trace.endpos, EV_RAILTRAIL );
+					// send sniper shot effect
+					tent = G_TempEntity( trace.endpos, EV_SNIPERTRAIL );
 					// set player number for custom colors on the railtrail
 					tent->s.clientNum = ent->s.clientNum;
 					VectorCopy( muzzle, tent->s.origin2 );
@@ -493,13 +487,13 @@ void weapon_railgun_fire (gentity_t *ent) {
 				if( LogAccuracyHit( traceEnt, ent ) ) {
 					hits++;
 				}
-				G_Damage (traceEnt, ent, ent, forward, trace.endpos, damage, 0, MOD_RAILGUN);
+				G_Damage (traceEnt, ent, ent, forward, trace.endpos, damage, 0, MOD_SNIPER);
 			}
 #else
 				if( LogAccuracyHit( traceEnt, ent ) ) {
 					hits++;
 				}
-				G_Damage (traceEnt, ent, ent, forward, trace.endpos, damage, 0, MOD_RAILGUN);
+				G_Damage (traceEnt, ent, ent, forward, trace.endpos, damage, 0, MOD_SNIPER);
 #endif
 		}
 		if ( trace.contents & CONTENTS_SOLID ) {
@@ -509,22 +503,22 @@ void weapon_railgun_fire (gentity_t *ent) {
 		trap_UnlinkEntity( traceEnt );
 		unlinkedEntities[unlinked] = traceEnt;
 		unlinked++;
-	} while ( unlinked < MAX_RAIL_HITS );
+	} while ( unlinked < MAX_SNIPER_HITS );
 
 	// link back in any entities we unlinked
 	for ( i = 0 ; i < unlinked ; i++ ) {
 		trap_LinkEntity( unlinkedEntities[i] );
 	}
 
-	// the final trace endpos will be the terminal point of the rail trail
+	// the final trace endpos will be the terminal point of the sniper trail
 
 	// snap the endpos to integers to save net bandwidth, but nudged towards the line
 	SnapVectorTowards( trace.endpos, muzzle );
 
-	// send railgun beam effect
-	tent = G_TempEntity( trace.endpos, EV_RAILTRAIL );
+	// send sniper trail effect
+	tent = G_TempEntity( trace.endpos, EV_SNIPERTRAIL );
 
-	// set player number for custom colors on the railtrail
+	// set player number for custom colors on the snipertrail
 	tent->s.clientNum = ent->s.clientNum;
 
 	VectorCopy( muzzle, tent->s.origin2 );
@@ -540,7 +534,7 @@ void weapon_railgun_fire (gentity_t *ent) {
 	}
 	tent->s.clientNum = ent->s.clientNum;
 
-	// give the shooter a reward sound if they have made two railgun hits in a row
+	// give the shooter a reward sound if they have made two sniper rifle hits in a row
 	if ( hits == 0 ) {
 		// complete miss
 		ent->client->accurateCount = 0;
@@ -852,9 +846,9 @@ void FireWeapon( gentity_t *ent ) {
 		break;
 	case WP_MACHINEGUN:
 		if ( g_gametype.integer != GT_TEAM ) {
-			Bullet_Fire( ent, MACHINEGUN_SPREAD, MACHINEGUN_DAMAGE );
+			Bullet_Fire( ent, MACHINEGUN_SPREAD, MACHINEGUN_DAMAGE, MOD_MACHINEGUN );
 		} else {
-			Bullet_Fire( ent, MACHINEGUN_SPREAD, MACHINEGUN_TEAM_DAMAGE );
+			Bullet_Fire( ent, MACHINEGUN_SPREAD, MACHINEGUN_TEAM_DAMAGE, MOD_MACHINEGUN );
 		}
 		break;
 	case WP_GRENADE_LAUNCHER:
@@ -866,8 +860,8 @@ void FireWeapon( gentity_t *ent ) {
 	case WP_PLASMAGUN:
 		Weapon_Plasmagun_Fire( ent );
 		break;
-	case WP_RAILGUN:
-		weapon_railgun_fire( ent );
+	case WP_SNIPERRIFLE:
+		weapon_sniperrifle_fire( ent );
 		break;
 	case WP_BFG:
 		BFG_Fire( ent );
@@ -883,7 +877,7 @@ void FireWeapon( gentity_t *ent ) {
 		weapon_proxlauncher_fire( ent );
 		break;
 	case WP_CHAINGUN:
-		Bullet_Fire( ent, CHAINGUN_SPREAD, MACHINEGUN_DAMAGE );
+		Bullet_Fire( ent, CHAINGUN_SPREAD, MACHINEGUN_DAMAGE, MOD_CHAINGUN );
 		break;
 #endif
 	default:

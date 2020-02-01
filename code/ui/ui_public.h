@@ -113,6 +113,7 @@ typedef enum {
 	UI_CIN_PLAYCINEMATIC,
 	UI_CIN_STOPCINEMATIC,
 	UI_CIN_RUNCINEMATIC,
+	UI_R_REGISTERWEAPON,
 	UI_CIN_DRAWCINEMATIC,
 	UI_CIN_SETEXTENTS,
 	UI_R_REMAP_SHADER,
@@ -182,7 +183,9 @@ typedef enum {
 
 	UI_DRAW_CONNECT_SCREEN,
 //	void	UI_DrawConnectScreen( qboolean overlay );
-	UI_HASUNIQUECDKEY
+	UI_HASUNIQUECDKEY,
+
+	UI_RUN_MENU_SCRIPT,
 // if !overlay, the background will be drawn, otherwise it will be
 // overlayed over whatever the cgame has drawn.
 // a GetClientState syscall will be made to get the current strings

@@ -179,7 +179,7 @@ typedef struct
 	menuaction_s		grenadelauncher;
 	menuaction_s		rocketlauncher;
 	menuaction_s		lightning;
-	menuaction_s		railgun;
+	menuaction_s		sniper;
 	menuaction_s		plasma;
 	menuaction_s		bfg;
 	menuaction_s		attack;
@@ -304,7 +304,7 @@ static menucommon_s *g_weapons_controls[] = {
 	(menucommon_s *)&s_controls.grenadelauncher,
 	(menucommon_s *)&s_controls.rocketlauncher,   
 	(menucommon_s *)&s_controls.lightning,   
-	(menucommon_s *)&s_controls.railgun,          
+	(menucommon_s *)&s_controls.sniper,          
 	(menucommon_s *)&s_controls.plasma,           
 	(menucommon_s *)&s_controls.bfg,              
 	NULL,
@@ -505,7 +505,7 @@ static void Controls_UpdateModel( int anim ) {
 		break;
 
 	case ANIM_WEAPON7:
-		s_controls.playerWeapon = WP_RAILGUN;
+		s_controls.playerWeapon = WP_SNIPERRIFLE;
 		break;
 
 	case ANIM_WEAPON8:
@@ -1377,11 +1377,11 @@ static void Controls_MenuInit( void )
 	s_controls.lightning.generic.ownerdraw = Controls_DrawKeyBinding;
 	s_controls.lightning.generic.id        = ID_WEAPON6;
 
-	s_controls.railgun.generic.type	     = MTYPE_ACTION;
-	s_controls.railgun.generic.flags     = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS|QMF_GRAYED|QMF_HIDDEN;
-	s_controls.railgun.generic.callback  = Controls_ActionEvent;
-	s_controls.railgun.generic.ownerdraw = Controls_DrawKeyBinding;
-	s_controls.railgun.generic.id        = ID_WEAPON7;
+	s_controls.sniper.generic.type	     = MTYPE_ACTION;
+	s_controls.sniper.generic.flags     = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS|QMF_GRAYED|QMF_HIDDEN;
+	s_controls.sniper.generic.callback  = Controls_ActionEvent;
+	s_controls.sniper.generic.ownerdraw = Controls_DrawKeyBinding;
+	s_controls.sniper.generic.id        = ID_WEAPON7;
 
 	s_controls.plasma.generic.type	    = MTYPE_ACTION;
 	s_controls.plasma.generic.flags     = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS|QMF_GRAYED|QMF_HIDDEN;
@@ -1606,7 +1606,7 @@ static void Controls_MenuInit( void )
 	Menu_AddItem( &s_controls.menu, &s_controls.grenadelauncher );
 	Menu_AddItem( &s_controls.menu, &s_controls.rocketlauncher );
 	Menu_AddItem( &s_controls.menu, &s_controls.lightning );
-	Menu_AddItem( &s_controls.menu, &s_controls.railgun );
+	Menu_AddItem( &s_controls.menu, &s_controls.sniper );
 	Menu_AddItem( &s_controls.menu, &s_controls.plasma );
 	Menu_AddItem( &s_controls.menu, &s_controls.bfg );
 

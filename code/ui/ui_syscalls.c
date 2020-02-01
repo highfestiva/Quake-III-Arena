@@ -375,7 +375,6 @@ e_status trap_CIN_RunCinematic (int handle) {
   return syscall(UI_CIN_RUNCINEMATIC, handle);
 }
  
-
 // draws the current frame
 void trap_CIN_DrawCinematic (int handle) {
   syscall(UI_CIN_DRAWCINEMATIC, handle);
